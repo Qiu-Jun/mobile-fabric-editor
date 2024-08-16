@@ -1,0 +1,13 @@
+{
+  "lazyCodeLoading": "requiredComponents",
+  "extEnable": true,
+  "extAppid": "wx445b225e03ee51aa",
+  "directCommit": false,
+  "ext": {
+    "name": "wechat",
+    "attr": {
+      "host": "open.weixin.qq.com",
+      "users": ["user_1", "user_2"]
+    }
+  }
+}

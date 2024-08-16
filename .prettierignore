@@ -1,0 +1,4 @@
+dist
+node_modules
+src/dts/auto-imports.d.ts
+.hbuilderx
