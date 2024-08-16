@@ -2,9 +2,9 @@
  * @Author: June
  * @Description:
  * @Date: 2024-08-14 22:12:49
- * @LastEditTime: 2024-08-15 09:15:36
+ * @LastEditTime: 2024-08-16 18:54:27
  * @LastEditors: June
- * @FilePath: \editor\vite.config.ts
+ * @FilePath: \mobile-fabric-editor\vite.config.ts
  */
 import { defineConfig } from 'vite'
 import uni from '@dcloudio/vite-plugin-uni'
@@ -13,6 +13,7 @@ import AutoImport from 'unplugin-auto-import/vite'
 import Unocss from 'unocss/vite'
 
 export default defineConfig({
+  base: './',
   plugins: [
     AutoImport({
       imports: ['vue', 'uni-app'],

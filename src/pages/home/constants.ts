@@ -2,7 +2,7 @@
  * @Author: June
  * @Description:
  * @Date: 2024-08-14 23:03:07
- * @LastEditTime: 2024-08-16 18:10:12
+ * @LastEditTime: 2024-08-16 18:55:14
  * @LastEditors: June
  * @FilePath: \mobile-fabric-editor\src\pages\home\constants.ts
  */
@@ -45,19 +45,19 @@ export const colors = [
 export const fontsList = [
   {
     name: '华康金刚黑',
-    file: 'https://env-00jxgnbpjqmg-static.normal.cloudstatic.cn/font/华康金刚黑.ttf'
+    file: '/font/华康金刚黑.ttf'
   },
   {
     name: '汉体',
-    file: 'https://env-00jxgnbpjqmg-static.normal.cloudstatic.cn/font/汉体.ttf'
+    file: '/font/汉体.ttf'
   },
   {
     name: '造字工房云川体',
-    file: 'https://env-00jxgnbpjqmg-static.normal.cloudstatic.cn/font/造字工房云川体.ttf'
+    file: '/font/造字工房云川体.ttf'
   },
   {
     name: '锐字潮牌真言',
-    file: 'https://env-00jxgnbpjqmg-static.normal.cloudstatic.cn/font/锐字潮牌真言.ttf'
+    file: '/font/锐字潮牌真言.ttf'
   }
 ]
 

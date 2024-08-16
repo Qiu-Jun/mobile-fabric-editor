@@ -47,9 +47,6 @@ importers:
       '@dcloudio/uni-quickapp-webview':
         specifier: 3.0.0-3080720230703001
         version: 3.0.0-3080720230703001(postcss@8.4.41)(vue@3.4.38(typescript@5.4.5))
-      '@types/node':
-        specifier: ^22.3.0
-        version: 22.3.0
       fabric:
         specifier: ^5.4.0
         version: 5.4.0
@@ -99,6 +96,9 @@ importers:
       '@types/lodash-es':
         specifier: ^4.17.12
         version: 4.17.12
+      '@types/node':
+        specifier: ^22.3.0
+        version: 22.3.0
       '@typescript-eslint/eslint-plugin':
         specifier: ^6.1.0
         version: 6.1.0(@typescript-eslint/parser@6.1.0(eslint@8.45.0)(typescript@5.4.5))(eslint@8.45.0)(typescript@5.4.5)
