@@ -2,9 +2,9 @@
  * @Author: June
  * @Description:
  * @Date: 2024-08-14 23:03:07
- * @LastEditTime: 2024-08-16 17:29:39
+ * @LastEditTime: 2024-08-16 18:10:12
  * @LastEditors: June
- * @FilePath: \mine-pro\packages\editor\src\pages\home\constants.ts
+ * @FilePath: \mobile-fabric-editor\src\pages\home\constants.ts
  */
 import oneIcon from '@/static/images/ex.png'
 import twoIcon from '@/static/images/text.png'
@@ -42,23 +42,22 @@ export const colors = [
   '#abc'
 ]
 // 字体
-export const iosFonts = ['华康金刚黑', '汉体', '造字工房云川体', '锐字潮牌真言']
 export const fontsList = [
   {
     name: '华康金刚黑',
-    file: '/static/font/华康金刚黑.ttf'
+    file: 'https://env-00jxgnbpjqmg-static.normal.cloudstatic.cn/font/华康金刚黑.ttf'
   },
   {
     name: '汉体',
-    file: '/static/font/汉体.ttf'
+    file: 'https://env-00jxgnbpjqmg-static.normal.cloudstatic.cn/font/汉体.ttf'
   },
   {
     name: '造字工房云川体',
-    file: '/static/font/造字工房云川体.ttf'
+    file: 'https://env-00jxgnbpjqmg-static.normal.cloudstatic.cn/font/造字工房云川体.ttf'
   },
   {
     name: '锐字潮牌真言',
-    file: '/static/font/锐字潮牌真言.ttf'
+    file: 'https://env-00jxgnbpjqmg-static.normal.cloudstatic.cn/font/锐字潮牌真言.ttf'
   }
 ]
 

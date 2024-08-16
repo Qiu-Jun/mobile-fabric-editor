@@ -2,9 +2,9 @@
  * @Author: June
  * @Description: 
  * @Date: 2024-08-16 12:40:31
- * @LastEditTime: 2024-08-16 17:21:36
+ * @LastEditTime: 2024-08-16 18:34:49
  * @LastEditors: June
- * @FilePath: \mine-pro\packages\editor\src\pages\home\components\FontView\index.vue
+ * @FilePath: \mobile-fabric-editor\src\pages\home\components\FontView\index.vue
 -->
 <template>
   <wd-popup
@@ -21,18 +21,18 @@
       >
         <text class="text-28rpx" @click="handleCancel">取消</text>
         <view class="flex-1 text-32rpx text-center font-bold">字体</view>
-        <text class="text-28rpx">确认</text>
+        <text class="text-28rpx" @click="handleConfirm">确认</text>
       </view>
       <view
         class="my-20rpx text-center text-#6a6a6a"
         :class="{
           'text-48rpx text-#fff': curIndex === index
         }"
-        v-for="(font, index) in iosFonts"
+        v-for="(font, index) in fontsList"
         :key="index"
         @click="handleFont(index)"
       >
-        {{ font }}
+        {{ font.name }}
       </view>
     </view>
   </wd-popup>
@@ -41,7 +41,7 @@
 <script lang="ts" setup>
 import { debounce } from 'lodash-es'
 import FontFaceObserver from 'fontfaceobserver'
-import { iosFonts } from '../../constants'
+import { fontsList } from '../../constants'
 import { useEditorStore } from '@/store'
 
 const editorStore = useEditorStore()
@@ -80,7 +80,20 @@ const handleCancel = debounce(close, 250)
 const handleFont = debounce(function (index: number) {
   curIndex.value = index
 }, 250)
-const handleConfirm = debounce(function () {}, 250)
+const handleConfirm = debounce(function () {
+  const _curIndex = unref(curIndex)
+  const fontName = fontsList[_curIndex].name
+  const font = new FontFaceObserver(fontName)
+  font
+    .load(null, 150000)
+    .then(() => {
+      updateAttr('fontFamily', fontName)
+      close()
+    })
+    .catch((err) => {
+      alert(err)
+    })
+}, 250)
 
 defineExpose({
   open,

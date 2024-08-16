@@ -2,9 +2,9 @@
  * @Author: June
  * @Description: 
  * @Date: 2024-04-24 09:32:13
- * @LastEditTime: 2024-08-16 10:54:00
+ * @LastEditTime: 2024-08-16 18:13:17
  * @LastEditors: June
- * @FilePath: \mine-pro\packages\editor\src\pages\home\index.vue
+ * @FilePath: \mobile-fabric-editor\src\pages\home\index.vue
 -->
 <template>
   <view class="bg-#222 w-100vw h-100vh relative f-center flex-col">
@@ -99,17 +99,12 @@ import alnIcon from '@/static/images/al_normal.png'
 import arnIcon from '@/static/images/ar_normal.png'
 import initControls from '@/core/initControls'
 import initAligningGuidelines from '@/core/initAligningGuidelines'
-import { fitterList, bottomList } from './constants'
+import { fontsList, bottomList } from './constants'
 import { fabric } from 'fabric'
 import { debounce } from 'lodash-es'
-import {
-  isIPhoneX,
-  guid,
-  downFontByJSON,
-  getFilter,
-  getCanvasWH
-} from '@/utils/tools'
+import { isIPhoneX, guid, downFontByJSON, getCanvasWH } from '@/utils/tools'
 import { useEditorStore } from '@/store'
+import { createFontCSS } from '@/utils/fonts'
 
 const editorStore = useEditorStore()
 type ElementType = 'IText' | 'Image' | 'Textbox'
@@ -335,8 +330,6 @@ const initWorkspace = (canvas: any) => {
   canvas.add(workspace1)
   canvas.renderAll()
   workspace.value = workspace1
-  // const scale = _getScale();
-  // setZoomAuto(scale);
   setZoomAuto(1)
 }
 
@@ -377,6 +370,8 @@ onMounted(() => {
     'object:modified': updateCanvasState,
     'object:added': updateCanvasState
   })
+
+  createFontCSS(fontsList)
 })
 
 function mouseDown() {

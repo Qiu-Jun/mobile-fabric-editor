@@ -2,9 +2,9 @@
  * @Author: June
  * @Description:
  * @Date: 2024-08-16 17:21:46
- * @LastEditTime: 2024-08-16 17:21:50
+ * @LastEditTime: 2024-08-16 18:13:48
  * @LastEditors: June
- * @FilePath: \mine-pro\packages\editor\src\utils\fonts.ts
+ * @FilePath: \mobile-fabric-editor\src\utils\fonts.ts
  */
 export function createFontCSS(arr: any[]) {
   let code = ''
@@ -22,6 +22,7 @@ export function createFontCSS(arr: any[]) {
   try {
     style.appendChild(document.createTextNode(code))
   } catch (error) {
+    console.log(error)
     // style.styleSheet.cssText = code;
   }
   const head = document.getElementsByTagName('head')[0]
