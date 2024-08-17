@@ -2,7 +2,7 @@
  * @Author: June
  * @Description: 
  * @Date: 2024-04-24 09:32:13
- * @LastEditTime: 2024-08-16 18:13:17
+ * @LastEditTime: 2024-08-17 14:36:14
  * @LastEditors: June
  * @FilePath: \mobile-fabric-editor\src\pages\home\index.vue
 -->
@@ -211,7 +211,7 @@ const handleSave = debounce(function () {
 // 模板相关 start
 const tempRef = ref()
 const onSelectTemp = (item: any) => {
-  console.log(item)
+  item.id && renderJson(item.id)
 }
 // 模板相关 end
 
@@ -450,5 +450,38 @@ function insertElement(type: ElementType, url?: any) {
     return
   }
   canvasRef.add(shape).setActiveObject(shape) // 添加并设置激活
+}
+
+// 读取模板 json
+function renderJson(id: string) {
+  const tplsV = JSON.parse(localStorage.getItem('tpls') || '{}')
+  clear()
+  // 加载字体后导入
+  downFontByJSON(tplsV[id].json).then(() => {
+    canvasRef.loadFromJSON(tplsV[id].json, () => {
+      canvasRef.renderAll.bind(canvasRef)
+      setNewSize()
+    })
+  })
+}
+
+// 重置画布
+function setNewSize() {
+  // 重新设置workspace
+  workspace.value = canvasRef
+    .getObjects()
+    .find((item: any) => item.id === 'workspace') as fabric.Rect
+  if (workspace.value) {
+    option.width = workspace.value.width as number
+    option.height = workspace.value.height as number
+    workspace.value.set('width', workspace.value.width)
+    workspace.value.set('height', workspace.value.height)
+  }
+  setZoomAuto(1)
+}
+
+// 清空画布
+function clear() {
+  canvasRef.clear()
 }
 </script>

@@ -2,7 +2,7 @@
  * @Author: June
  * @Description:
  * @Date: 2024-08-14 23:03:07
- * @LastEditTime: 2024-08-16 18:55:14
+ * @LastEditTime: 2024-08-17 12:06:31
  * @LastEditors: June
  * @FilePath: \mobile-fabric-editor\src\pages\home\constants.ts
  */
@@ -10,6 +10,10 @@ import oneIcon from '@/static/images/ex.png'
 import twoIcon from '@/static/images/text.png'
 import threeIcon from '@/static/images/ic.png'
 import fourIcon from '@/static/images/add.png'
+import font1 from '@/static/font/华康金刚黑.ttf'
+import font2 from '@/static/font/汉体.ttf'
+import font3 from '@/static/font/造字工房云川体.ttf'
+import font4 from '@/static/font/锐字潮牌真言.ttf'
 
 export const bottomList = [
   { icon: oneIcon, name: '换模板' },
@@ -45,19 +49,19 @@ export const colors = [
 export const fontsList = [
   {
     name: '华康金刚黑',
-    file: '/font/华康金刚黑.ttf'
+    file: font1
   },
   {
     name: '汉体',
-    file: '/font/汉体.ttf'
+    file: font2
   },
   {
     name: '造字工房云川体',
-    file: '/font/造字工房云川体.ttf'
+    file: font3
   },
   {
     name: '锐字潮牌真言',
-    file: '/font/锐字潮牌真言.ttf'
+    file: font4
   }
 ]
 

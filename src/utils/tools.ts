@@ -1,10 +1,13 @@
+import FontFaceObserver from 'fontfaceobserver'
+import { fontsList } from '@/pages/home/constants'
+import { intersectionWith, isEqual } from 'lodash-es'
 /*
  * @Author: June
  * @Description:
  * @Date: 2024-08-14 23:16:55
- * @LastEditTime: 2024-08-15 21:29:46
+ * @LastEditTime: 2024-08-17 14:47:54
  * @LastEditors: June
- * @FilePath: \editor\src\utils\tools.ts
+ * @FilePath: \mobile-fabric-editor\src\utils\tools.ts
  */
 export const testUA = (str: string) => {
   return navigator.userAgent.indexOf(str) > -1
@@ -114,4 +117,29 @@ export const getFilter = (sourceImg: any, type: string) => {
  */
 export const getFabricFilterType = (type: string) => {
   return type.charAt(0).toUpperCase() + type.slice(1)
+}
+
+/**
+ * @description: 根据json模板下载字体文件
+ * @param {String} str
+ * @return {Promise}
+ */
+export function downFontByJSON(str: any) {
+  const objectFamilys = str.objects
+    .filter((item: any) => {
+      // 为text
+      return item.type.includes('text')
+    })
+    .map((item: any) => item.fontFamily)
+  // fontsList
+  const fontFamilys = intersectionWith(
+    objectFamilys,
+    fontsList.map((i) => i.name),
+    isEqual
+  )
+  const fontFamilysAll = fontFamilys.map((fontName: string) => {
+    const font = new FontFaceObserver(fontName)
+    return font.load(null, 150000)
+  })
+  return Promise.all(fontFamilysAll)
 }
