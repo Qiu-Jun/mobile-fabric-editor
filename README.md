@@ -2,8 +2,8 @@
  * @Description: md
  * @Author: June
  * @Date: 2024-04-24 09:32:13
- * @FilePath: \uni-cli-template\README.md
- * @LastEditTime: 2024-04-24 10:51:18
+ * @FilePath: \mobile-fabric-editor\README.md
+ * @LastEditTime: 2024-08-17 15:17:53
  * @LastEditors: June
 -->
 
@@ -84,3 +84,13 @@ pnpm commit # 使用此命令编写commit
 - [x] eslint + prettier + husky
 - [x] unocss
 - [x] commit cz
+
+## 管理员
+
+<!-- readme: collaborators -start -->
+<!-- readme: collaborators -end -->
+
+## 贡献者
+
+<!-- readme: contributors -start -->
+<!-- readme: contributors -end -->
