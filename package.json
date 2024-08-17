@@ -5,7 +5,7 @@
     "preinstall": "npx only-allow pnpm",
     "dev:h5": "uni",
     "dev:h5:ssr": "uni --ssr",
-    "build:h5": "uni build",
+    "build:h5": "uni build ",
     "build:h5:ssr": "uni build --ssr",
     "type-check": "vue-tsc --noEmit",
     "lint": "eslint --ext .vue,.js,.ts,.jsx,.tsx src --fix",
@@ -58,7 +58,6 @@
     "git-cz": "^4.9.0",
     "husky": "^8.0.3",
     "lint-staged": "^15.2.2",
-    "patch-package": "^8.0.0",
     "prettier": "^3.0.0",
     "sass": "^1.63.6",
     "sass-loader": "^13.3.2",
@@ -83,10 +82,5 @@
       "eslint --fix",
       "prettier --write"
     ]
-  },
-  "pnpm": {
-    "patchedDependencies": {
-      "@dcloudio/vite-plugin-uni@3.0.0-3080720230703001": "patches/@dcloudio__vite-plugin-uni@3.0.0-3080720230703001.patch"
-    }
   }
 }
