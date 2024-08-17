@@ -6,7 +6,7 @@ settings:
 
 patchedDependencies:
   '@dcloudio/vite-plugin-uni@3.0.0-3080720230703001':
-    hash: u4h2lrxsy2rk777f4boqotitfe
+    hash: un5jjwjldkk2onhfib4owqvuji
     path: patches/@dcloudio__vite-plugin-uni@3.0.0-3080720230703001.patch
 
 importers:
@@ -94,7 +94,7 @@ importers:
         version: 3.0.0-3080720230703001
       '@dcloudio/vite-plugin-uni':
         specifier: 3.0.0-3080720230703001
-        version: 3.0.0-3080720230703001(patch_hash=u4h2lrxsy2rk777f4boqotitfe)(postcss@8.4.41)(vite@4.5.3(@types/node@22.3.0)(sass@1.63.6)(terser@5.19.1))(vue@3.4.38(typescript@5.4.5))
+        version: 3.0.0-3080720230703001(patch_hash=un5jjwjldkk2onhfib4owqvuji)(postcss@8.4.41)(vite@4.5.3(@types/node@22.3.0)(sass@1.63.6)(terser@5.19.1))(vue@3.4.38(typescript@5.4.5))
       '@types/fabric':
         specifier: ^5.3.8
         version: 5.3.8
@@ -7021,7 +7021,7 @@ snapshots:
       - ts-node
       - vue
 
-  '@dcloudio/vite-plugin-uni@3.0.0-3080720230703001(patch_hash=u4h2lrxsy2rk777f4boqotitfe)(postcss@8.4.41)(vite@4.5.3(@types/node@22.3.0)(sass@1.63.6)(terser@5.19.1))(vue@3.4.38(typescript@5.4.5))':
+  '@dcloudio/vite-plugin-uni@3.0.0-3080720230703001(patch_hash=un5jjwjldkk2onhfib4owqvuji)(postcss@8.4.41)(vite@4.5.3(@types/node@22.3.0)(sass@1.63.6)(terser@5.19.1))(vue@3.4.38(typescript@5.4.5))':
     dependencies:
       '@babel/core': 7.22.9
       '@babel/plugin-syntax-import-meta': 7.10.4(@babel/core@7.22.9)

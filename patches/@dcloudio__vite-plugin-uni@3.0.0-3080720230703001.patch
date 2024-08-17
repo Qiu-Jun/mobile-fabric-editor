@@ -1,12 +1,12 @@
 diff --git a/dist/cli/action.js b/dist/cli/action.js
-index 59e11a6d0cd033deab0a6f69f6ecaa3ba45ce0c6..25e7240cba5c14f40e34dc2dc8d7e79344ddb804 100644
+index 59e11a6d0cd033deab0a6f69f6ecaa3ba45ce0c6..6b485a7b01c98674f62366a61c2cc42f018d21d2 100644
 --- a/dist/cli/action.js
 +++ b/dist/cli/action.js
 @@ -132,6 +132,7 @@ async function runBuild(options) {
          if (options.platform !== 'h5') {
              (0, utils_1.showRunPrompt)(options.platform);
          }
-+        process.exit(1);
++        process.exit();
      }
      catch (e) {
          console.error(`Build failed with errors.`);
