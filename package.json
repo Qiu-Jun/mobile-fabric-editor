@@ -27,6 +27,7 @@
     "@dcloudio/uni-mp-toutiao": "3.0.0-3080720230703001",
     "@dcloudio/uni-mp-weixin": "3.0.0-3080720230703001",
     "@dcloudio/uni-quickapp-webview": "3.0.0-3080720230703001",
+    "editor": "link:",
     "fabric": "^5.4.0",
     "fontfaceobserver": "^2.3.0",
     "lodash-es": "^4.17.21",
@@ -82,5 +83,10 @@
       "eslint --fix",
       "prettier --write"
     ]
+  },
+  "pnpm": {
+    "patchedDependencies": {
+      "@dcloudio/vite-plugin-uni@3.0.0-3080720230703001": "patches/@dcloudio__vite-plugin-uni@3.0.0-3080720230703001.patch"
+    }
   }
 }
