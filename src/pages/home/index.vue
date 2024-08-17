@@ -2,7 +2,7 @@
  * @Author: June
  * @Description: 
  * @Date: 2024-04-24 09:32:13
- * @LastEditTime: 2024-08-17 14:36:14
+ * @LastEditTime: 2024-08-18 01:38:00
  * @LastEditors: June
  * @FilePath: \mobile-fabric-editor\src\pages\home\index.vue
 -->
@@ -239,7 +239,6 @@ const handleOperate = debounce(function (index: number) {
     case 1:
       insertElement('Textbox')
       setCurrentCom({ showPop: true, firstIndex: index })
-      console.log(currentCom)
       break
     case 2:
       uni.chooseImage({
@@ -370,6 +369,10 @@ onMounted(() => {
     'object:modified': updateCanvasState,
     'object:added': updateCanvasState
   })
+
+  uni.$on('initCurrentCom', () =>
+    setCurrentCom({ showPop: false, firstIndex: -1 })
+  )
 
   createFontCSS(fontsList)
 })

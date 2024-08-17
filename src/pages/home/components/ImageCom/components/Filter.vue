@@ -2,7 +2,7 @@
  * @Author: June
  * @Description: 
  * @Date: 2024-08-15 20:26:05
- * @LastEditTime: 2024-08-17 22:41:27
+ * @LastEditTime: 2024-08-18 01:42:57
  * @LastEditors: June
  * @FilePath: \mobile-fabric-editor\src\pages\home\components\ImageCom\components\Filter.vue
 -->
@@ -136,11 +136,11 @@ const getFilterData = () => {
       obj[item.key] = v1
     }
   })
-  fitterInfo.blur = obj?.blur ?? 0
-  fitterInfo.grayscale = obj?.grayscale ?? 0
-  fitterInfo.brightness = obj?.brightness ?? 0
-  fitterInfo.contrast = obj?.contrast ?? 0
-  fitterInfo.saturation = obj?.saturation ?? 0
+  fitterInfo.blur = ~~(obj?.blur ?? 0)
+  fitterInfo.grayscale = ~~(obj?.grayscale ?? 0)
+  fitterInfo.brightness = ~~(obj?.brightness ?? 0)
+  fitterInfo.contrast = ~~(obj?.contrast ?? 0)
+  fitterInfo.saturation = ~~(obj?.saturation ?? 0)
 }
 
 const show = ref(false)

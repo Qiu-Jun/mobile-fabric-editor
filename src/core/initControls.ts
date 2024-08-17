@@ -217,6 +217,7 @@ function deleteObject(_eventData: any, transform: { target: any }) {
   const canvas = target.canvas
   canvas.remove(target)
   canvas.requestRenderAll()
+  uni.$emit('initCurrentCom')
 }
 
 // 选中样式列表
