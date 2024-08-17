@@ -31,8 +31,8 @@
                   ? '#fff'
                   : 'transparent'
                 : curColor == item
-                  ? '#fff'
-                  : 'transparent'
+                ? '#fff'
+                : 'transparent'
           }"
         >
           <template v-if="index === 0">

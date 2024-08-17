@@ -2,9 +2,9 @@
  * @Author: June
  * @Description: 
  * @Date: 2024-08-15 20:26:05
- * @LastEditTime: 2024-08-16 12:22:34
+ * @LastEditTime: 2024-08-17 22:43:05
  * @LastEditors: June
- * @FilePath: \mine-pro\packages\editor\src\pages\home\components\Opacity\index.vue
+ * @FilePath: \mobile-fabric-editor\src\pages\home\components\Opacity\index.vue
 -->
 <template>
   <wd-popup
@@ -17,20 +17,24 @@
     <view class="w-full bg-#111 py-30rpx">
       <view class="f-center w-full mb-20rpx">
         <text class="text-26rpx text-#c8c8c8 mr-12rpx w-14vw">不透明度</text>
-        <view class="w-70vw">
+        <view class="w-70vw mx-20rpx">
           <wd-slider
             :min="0"
             :max="100"
+            hide-label
+            hide-min-max
             v-model="curOpacity"
-            @dragend="onChange"
+            @dragmove="onChange"
           />
         </view>
+        <view class="10vw text-#fff">{{ curOpacity }}</view>
       </view>
     </view>
   </wd-popup>
 </template>
 
 <script lang="ts" setup>
+import { throttle } from 'lodash-es'
 import { useEditorStore } from '@/store'
 
 const editorStore = useEditorStore()
@@ -57,10 +61,17 @@ const updateAttr = (
   editorStore.canvas.renderAll()
 }
 const curOpacity = ref(100)
-const onChange = ({ value }: { value: number }) =>
+const onChange = throttle(function ({ value }: { value: number }) {
   updateAttr('opacity', value / 100)
+}, 250)
+
 const open = () => {
   show.value = true
+  nextTick(() => {
+    const _activeObject = unref(activeObj)
+    const _opacity = _activeObject.get('opacity')
+    curOpacity.value = _opacity * 100
+  })
 }
 
 const close = () => {

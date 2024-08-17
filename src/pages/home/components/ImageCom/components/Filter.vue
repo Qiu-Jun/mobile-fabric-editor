@@ -2,9 +2,9 @@
  * @Author: June
  * @Description: 
  * @Date: 2024-08-15 20:26:05
- * @LastEditTime: 2024-08-16 11:21:15
+ * @LastEditTime: 2024-08-17 22:41:27
  * @LastEditors: June
- * @FilePath: \mine-pro\packages\editor\src\pages\home\components\ImageCom\components\Filter.vue
+ * @FilePath: \mobile-fabric-editor\src\pages\home\components\ImageCom\components\Filter.vue
 -->
 <template>
   <wd-popup
@@ -23,20 +23,24 @@
         <text class="text-26rpx text-#c8c8c8 mr-12rpx w-12vw">{{
           item.name
         }}</text>
-        <view class="w-70vw">
+        <view class="w-70vw mx-20rpx">
           <wd-slider
             :min="0"
             :max="100"
+            hide-label
+            hide-min-max
             v-model="fitterInfo[item.key]"
-            @dragend="onChange($event, index)"
+            @dragmove="onChange($event, index)"
           />
         </view>
+        <view class="10vw text-#fff">{{ fitterInfo[item.key] }}</view>
       </view>
     </view>
   </wd-popup>
 </template>
 
 <script lang="ts" setup>
+import { throttle } from 'lodash-es'
 import { fabric } from 'fabric'
 import { getFilter, getFabricFilterType } from '@/utils/tools'
 import { fitterList } from '../../../constants'
@@ -114,14 +118,36 @@ const changeFitter = (value: number, index: number) => {
   }
 }
 
-const onChange = ({ value }: { value: number }, index: number) => {
+const onChange = throttle(function (
+  { value }: { value: number },
+  index: number
+) {
   changeFitter(value, index)
+}, 250)
+
+const getFilterData = () => {
+  const _activeObj = unref(activeObj)
+  let obj: any = {}
+  fitterList.forEach((item) => {
+    let itemFilter: any = getFilter(_activeObj, item.type)
+    if (itemFilter) {
+      let v = itemFilter[item.key]
+      let v1 = (v * 100).toFixed(0)
+      obj[item.key] = v1
+    }
+  })
+  fitterInfo.blur = obj?.blur ?? 0
+  fitterInfo.grayscale = obj?.grayscale ?? 0
+  fitterInfo.brightness = obj?.brightness ?? 0
+  fitterInfo.contrast = obj?.contrast ?? 0
+  fitterInfo.saturation = obj?.saturation ?? 0
 }
 
 const show = ref(false)
 
 const open = () => {
   show.value = true
+  nextTick(getFilterData)
 }
 
 const close = () => {

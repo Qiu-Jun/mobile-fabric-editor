@@ -18,20 +18,26 @@
           <text class="text-#fff text-26rpx mt-8rpx">{{ item.name }}</text>
         </view>
       </view>
-      <view class="mx-auto w-80vw">
-        <wd-slider
-          :min="0"
-          :max="100"
-          v-model="state.fontSize"
-          @dragend="onChange"
-        />
+      <view class="f-center w-full mb-20rpx w-full box-border p-20rpx">
+        <text class="text-26rpx text-#c8c8c8 mr-12rpx w-14vw">字体</text>
+        <view class="w-80vw mx-20rpx">
+          <wd-slider
+            :min="0"
+            :max="100"
+            hide-label
+            hide-min-max
+            v-model="state.fontSize"
+            @dragmove="onChange"
+          />
+        </view>
+        <view class="10vw text-#fff">{{ state.fontSize }}</view>
       </view>
     </view>
   </wd-popup>
 </template>
 
 <script lang="ts" setup>
-import { debounce } from 'lodash-es'
+import { debounce, throttle } from 'lodash-es'
 import bIcon from '@/static/images/b.png'
 import bA from '@/static/images/b_a.png'
 import xIcon from '@/static/images/x.png'
@@ -94,9 +100,9 @@ const handleMenu = debounce(function (index: number) {
   }
 }, 250)
 
-const onChange = ({ value }: { value: number }) => {
+const onChange = throttle(function ({ value }: { value: number }) {
   updateAttr('fontSize', value)
-}
+}, 250)
 
 const show = ref(false)
 
