@@ -2,9 +2,9 @@
  * @Author: June
  * @Description: 
  * @Date: 2024-08-15 16:56:00
- * @LastEditTime: 2024-08-15 19:47:16
+ * @LastEditTime: 2024-08-20 03:56:54
  * @LastEditors: June
- * @FilePath: \editor\src\pages\home\components\Background\index.vue
+ * @FilePath: \mine-pro\packages\editor\src\pages\home\components\Background\index.vue
 -->
 <template>
   <view
@@ -22,12 +22,16 @@
     >
       <view
         class="inline-block h-full py-40rpx"
-        v-for="(item, index) in list"
-        :key="index"
-        @click="handleMenu(index)"
+        v-for="item in BgTabList"
+        :key="item.type"
+        @click="handleMenu(item.type)"
       >
         <view class="f-center flex-col w-120rpx h-full">
-          <image class="w-44rpx h-44rpx mb-8rpx" :src="item.icon" />
+          <SvgIcon
+            :style="{ width: '48rpx', height: '48rpx' }"
+            color="#fff"
+            :name="item.icon"
+          />
           <text class="text-26rpx mt-8rpx text-#fff">{{ item.name }}</text>
         </view>
       </view>
@@ -39,28 +43,22 @@
 
 <script lang="ts" setup>
 import Color from '../Color/index.vue'
-import icon1 from '@/static/images/bg.png'
-import icon2 from '@/static/images/ic.png'
-import icon3 from '@/static/images/qc.png'
-import { isIPhoneX, getCanvasWH } from '@/utils/tools'
+import { isIPhoneX } from '@/utils/tools'
 import { useEditorStore } from '@/store'
+import { BgTabItem } from '@/enums'
+import { BgTabList } from '@/constants/tabs'
 
 const editorStore = useEditorStore()
 const _isIPhoneX = isIPhoneX()
-const size = getCanvasWH()
+const size = editorStore.editor.workspacePlugin.workspaceSize
 const colorRef = ref()
-const list = [
-  { icon: icon1, name: '背景色' },
-  { icon: icon2, name: '背景图' },
-  { icon: icon3, name: '清除图片' }
-]
 
-const handleMenu = (index: number) => {
-  switch (index) {
-    case 0:
+const handleMenu = (type: string) => {
+  switch (type) {
+    case BgTabItem.color:
       colorRef.value?.open()
       break
-    case 1:
+    case BgTabItem.image:
       uni.chooseImage({
         count: 1, // 默认9
         sizeType: ['compressed'], // 可以指定是原图还是压缩图，默认二者都有
@@ -83,8 +81,8 @@ const handleMenu = (index: number) => {
                     editorStore.canvas.renderAll.bind(editorStore.canvas),
                     {
                       // 保证背景图1:1铺满容器
-                      scaleX: size[0] / resp.width, //计算出图片要拉伸的宽度
-                      scaleY: size[1] / resp.height //计算出图片要拉伸的高度
+                      scaleX: size.width / resp.width, //计算出图片要拉伸的宽度
+                      scaleY: size.height / resp.height //计算出图片要拉伸的高度
                     }
                   )
                 }
@@ -94,7 +92,7 @@ const handleMenu = (index: number) => {
         }
       })
       break
-    case 2:
+    case BgTabItem.clear:
       // 设置为null , 设置为""无效
       editorStore.canvas.setBackgroundImage(
         null,

@@ -1,14 +1,19 @@
-import FontFaceObserver from 'fontfaceobserver'
-import { fontsList } from '@/pages/home/constants'
-import { intersectionWith, isEqual } from 'lodash-es'
 /*
  * @Author: June
  * @Description:
  * @Date: 2024-08-14 23:16:55
- * @LastEditTime: 2024-08-17 14:47:54
+ * @LastEditTime: 2024-08-20 03:50:37
  * @LastEditors: June
- * @FilePath: \mobile-fabric-editor\src\utils\tools.ts
+ * @FilePath: \mine-pro\packages\editor\src\utils\tools.ts
  */
+
+import FontFaceObserver from 'fontfaceobserver'
+import { fontsList } from '@/constants/editor'
+import { intersectionWith, isEqual } from 'lodash-es'
+import { useAppStoreSide } from '@/store/modules/app'
+
+const appStore = useAppStoreSide()
+
 export const testUA = (str: string) => {
   return navigator.userAgent.indexOf(str) > -1
 }
@@ -41,7 +46,7 @@ export const isIPhoneX = () => {
         testUA('iPhone'))
     )
   }
-  const { model } = uni.getSystemInfoSync()
+  const { model } = appStore.systemInfo as unknown as UniApp.SystemInfo
   return (
     model.search('iPhone X') != -1 ||
     model.search('11') != -1 ||
@@ -50,12 +55,6 @@ export const isIPhoneX = () => {
     model.search('14') != -1 ||
     model.search('15') != -1
   )
-}
-
-export function getCanvasWH() {
-  const infoSys = uni.getSystemInfoSync()
-  const { windowWidth } = infoSys
-  return [windowWidth * 0.85, windowWidth * 1.4]
 }
 
 /**

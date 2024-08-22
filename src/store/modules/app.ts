@@ -15,3 +15,7 @@ const useAppStore = defineStore({
 })
 
 export default useAppStore
+
+export function useAppStoreSide() {
+  return useAppStore()
+}

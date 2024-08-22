@@ -2,9 +2,9 @@
  * @Author: June
  * @Description: 
  * @Date: 2024-08-15 20:26:05
- * @LastEditTime: 2024-08-18 01:42:57
+ * @LastEditTime: 2024-08-18 01:48:00
  * @LastEditors: June
- * @FilePath: \mobile-fabric-editor\src\pages\home\components\ImageCom\components\Filter.vue
+ * @FilePath: \mine-pro\packages\editor\src\pages\home\components\ImageCom\components\Filter.vue
 -->
 <template>
   <wd-popup
@@ -40,10 +40,10 @@
 </template>
 
 <script lang="ts" setup>
-import { throttle } from 'lodash-es'
 import { fabric } from 'fabric'
+import { throttle } from 'lodash-es'
 import { getFilter, getFabricFilterType } from '@/utils/tools'
-import { fitterList } from '../../../constants'
+import { fitterList } from '@/constants/editor'
 import { useEditorStore } from '@/store'
 
 const editorStore = useEditorStore()

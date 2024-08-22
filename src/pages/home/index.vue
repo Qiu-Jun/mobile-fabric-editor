@@ -1,8 +1,8 @@
 <!--
  * @Author: June
  * @Description: 
- * @Date: 2024-04-24 09:32:13
- * @LastEditTime: 2024-08-18 01:38:00
+ * @Date: 2024-08-17 19:18:03
+ * @LastEditTime: 2024-08-22 18:28:57
  * @LastEditors: June
  * @FilePath: \mobile-fabric-editor\src\pages\home\index.vue
 -->
@@ -12,19 +12,22 @@
     <view
       class="bg-#373b4a h-90rpx absolute left-0 top-0 w-100vw flex flex-row justify-between items-center"
     >
-      <view class="w-10rpx h-10rpx"></view>
+      <view class="flex flex-row items-center justify-start px-10px"> </view>
       <view class="flex flex-row items-center justify-end px-10px">
-        <image
-          class="w-40rpx h-40rpx mx-10rpx"
-          :src="stateIndexRef > 0 ? alIcon : alnIcon"
+        <SvgIcon
+          class="mr-10rpx"
+          :style="{ width: '40rpx', height: '40rpx' }"
+          :color="stateIndexRef > 0 ? '#fff' : '#999'"
+          name="undo"
           @click="handlePre"
         />
-        <image
-          class="w-40rpx h-40rpx mx-10rpx"
-          :src="stateIndexRef < canvasStateRef.length - 1 ? arIcon : arnIcon"
+        <SvgIcon
+          :style="{ width: '40rpx', height: '40rpx' }"
+          :color="stateIndexRef < canvasStateRef.length - 1 ? '#fff' : '#999'"
+          name="redo"
           @click="handleNext"
         />
-        <wd-button class="mx-20rpx" size="small" @click="handlePreview">
+        <wd-button class="mx-10rpx" size="small" @click="handlePreview">
           预览
         </wd-button>
         <wd-button size="small" type="error" @click="handleSave">
@@ -52,11 +55,15 @@
     >
       <view
         class="f-center flex-col"
-        v-for="(item, index) in bottomList"
-        :key="index"
-        @click="handleOperate(index)"
+        v-for="item in HomeTabList"
+        :key="item.type"
+        @click="handleOperate(item.type)"
       >
-        <image class="w-48rpx h-48rpx" :src="item.icon" />
+        <SvgIcon
+          :style="{ width: '48rpx', height: '48rpx' }"
+          color="#fff"
+          :name="item.icon"
+        />
         <text class="mt-10rpx text-#fff text-26rpx">{{ item.name }}</text>
       </view>
     </view>
@@ -64,11 +71,11 @@
     <!-- 底部组件 -->
     <view
       class="w-100vw absolute left-0 right-0 bottom-0 z-10"
-      v-if="currentCom?.showPop && currentCom?.firstIndex !== 0"
+      v-if="currentCom?.showPop && currentCom?.comType !== TabItem.template"
     >
-      <FontCom v-if="currentCom.firstIndex === 1" />
-      <ImageCom v-else-if="currentCom.firstIndex === 2" />
-      <Background v-else-if="currentCom.firstIndex === 3" />
+      <FontCom v-if="currentCom.comType === TabItem.text" />
+      <ImageCom v-else-if="currentCom.comType === TabItem.image" />
+      <Background v-else-if="currentCom.comType === TabItem.bg" />
     </view>
   </view>
 
@@ -93,21 +100,22 @@ import Templates from './components/Templates/index.vue'
 import FontCom from './components/FontCom/index.vue'
 import ImageCom from './components/ImageCom/index.vue'
 import Background from './components/Background/index.vue'
-import alIcon from '@/static/images/al.png'
-import arIcon from '@/static/images/ar.png'
-import alnIcon from '@/static/images/al_normal.png'
-import arnIcon from '@/static/images/ar_normal.png'
-import initControls from '@/core/initControls'
-import initAligningGuidelines from '@/core/initAligningGuidelines'
-import { fontsList, bottomList } from './constants'
 import { fabric } from 'fabric'
 import { debounce } from 'lodash-es'
-import { isIPhoneX, guid, downFontByJSON, getCanvasWH } from '@/utils/tools'
+import { isIPhoneX, guid, downFontByJSON } from '@/utils/tools'
+import { Editor } from '@/core/editor'
+import { TabItem } from '@/enums'
+import { HomeTabList } from '@/constants/tabs'
 import { useEditorStore } from '@/store'
-import { createFontCSS } from '@/utils/fonts'
 
 const editorStore = useEditorStore()
+
 type ElementType = 'IText' | 'Image' | 'Textbox'
+type TabType = TabItem.template | TabItem.text | TabItem.image | TabItem.bg
+type ICurrentCom = {
+  showPop: boolean
+  comType: TabType
+}
 
 const baseShapeConfig = {
   Textbox: {
@@ -122,28 +130,16 @@ const baseShapeConfig = {
 const _isIPhoneX = isIPhoneX()
 const canvasStateRef = ref<any[]>([])
 
-const workspace = ref<fabric.Rect | null>()
-const size = getCanvasWH()
-const option = reactive({
-  width: size[0],
-  height: size[1]
-})
-
-const workspaceEl = ref<HTMLElement | null>(null)
 let canvasRef: any = null
-
-type ICurrentCom = {
-  showPop: boolean
-  firstIndex: number
-}
+let editor: any = null
 
 const currentCom = reactive<ICurrentCom>({
   showPop: true,
-  firstIndex: 0
+  comType: TabItem.template
 })
 const setCurrentCom = (ops: ICurrentCom) => {
   currentCom.showPop = ops.showPop
-  currentCom.firstIndex = ops.firstIndex
+  currentCom.comType = ops.comType
 }
 
 const getImgUrl = () => {
@@ -155,7 +151,6 @@ const getImgUrl = () => {
 // 撤销 重做 start
 const stateIndexRef = ref<number>(0)
 const historyState = (index: number) => {
-  // console.log("dd", index, canvasStateRef.current, stateIndexRef.current);
   canvasRef.loadFromJSON(JSON.parse(canvasStateRef.value[index]), () => {
     canvasRef.renderAll()
     stateIndexRef.value = index
@@ -230,17 +225,17 @@ const currentTextBox = ref({
 
 // 字体相关 end
 
-const handleOperate = debounce(function (index: number) {
-  switch (index) {
-    case 0:
+const handleOperate = debounce(function (type: TabType) {
+  switch (type) {
+    case TabItem.template:
       tempRef.value?.open()
-      setCurrentCom({ showPop: true, firstIndex: index })
+      setCurrentCom({ showPop: true, comType: type })
       break
-    case 1:
+    case TabItem.text:
       insertElement('Textbox')
-      setCurrentCom({ showPop: true, firstIndex: index })
+      setCurrentCom({ showPop: true, comType: type })
       break
-    case 2:
+    case TabItem.image:
       uni.chooseImage({
         count: 1,
         sizeType: ['compressed'], // 可以指定是原图还是压缩图，默认二者都有
@@ -268,101 +263,18 @@ const handleOperate = debounce(function (index: number) {
         }
       })
       break
-    case 3:
-      setCurrentCom({ showPop: true, firstIndex: index })
+    case TabItem.bg:
+      setCurrentCom({ showPop: true, comType: type })
       break
     default:
       break
   }
 }, 250)
 
-/**
- * 设置画布中心到指定对象中心点上
- * @param {Object} obj 指定的对象
- */
-const setCenterFromObject = (obj: fabric.Rect, canvas: any) => {
-  const objCenter = obj.getCenterPoint()
-  const viewportTransform = canvas.viewportTransform
-  if (
-    canvas.width === undefined ||
-    canvas.height === undefined ||
-    !viewportTransform
-  )
-    return
-  viewportTransform[4] = canvas.width / 2 - objCenter.x * viewportTransform[0]
-  viewportTransform[5] = canvas.height / 2 - objCenter.y * viewportTransform[3]
-  canvas.setViewportTransform(viewportTransform)
-  canvas.renderAll()
-}
-
-const setZoomAuto = (
-  scale: number,
-  cb?: (left?: number, top?: number) => void
-) => {
-  const center = canvasRef.getCenter()
-  canvasRef.setViewportTransform(fabric.iMatrix.concat())
-  canvasRef.zoomToPoint(new fabric.Point(center.left, center.top), scale)
-  if (!workspace.value) return
-  setCenterFromObject(workspace.value, canvasRef)
-
-  // 超出画布不展示
-  workspace.value.clone((cloned: fabric.Rect) => {
-    cloned.id = 'workspace'
-    canvasRef.clipPath = cloned
-    canvasRef?.requestRenderAll()
-  })
-  if (cb) cb(workspace.value.left, workspace.value.top)
-}
-
-// 初始化画布
-const initWorkspace = (canvas: any) => {
-  const { width, height } = option
-  const workspace1 = new fabric.Rect({
-    fill: 'transparent',
-    width,
-    height,
-    id: 'workspace'
-  })
-  workspace1.set('selectable', false)
-  workspace1.set('hasControls', false)
-  workspace1.hoverCursor = ''
-  canvas.add(workspace1)
-  canvas.renderAll()
-  workspace.value = workspace1
-  setZoomAuto(1)
-}
-
-// 初始化背景
-const initBackground = (canvas: any) => {
-  canvasRef.setBackgroundColor('#fff', canvas.renderAll.bind(canvas))
-  canvasRef.setWidth(workspaceEl.value!.offsetWidth)
-  canvasRef.setHeight(workspaceEl.value!.offsetHeight)
-}
-
 onMounted(() => {
-  workspaceEl.value = document.getElementById('workspace') as HTMLElement
-  if (!workspaceEl.value) {
-    throw new Error('element #workspace is missing, plz check!')
-  }
-  // 直接使用使用canvas标签会有问题，查看控制台就知道这个cnavas是uni-canvas并非web原生的canvas
-  const canvasEl = document.createElement('canvas')
-  canvasEl.setAttribute('id', 'editor')
-  workspaceEl.value.appendChild(canvasEl)
-  canvasRef = new fabric.Canvas('editor', {
-    preserveObjectStacking: true, // 禁止被选中的元素跑到视图的最顶层，保留原层级
-    selection: false,
-    includeDefaultValues: false, // 精简json
-    controlsAboveOverlay: true // 超出clipPath后仍然展示控制条
-  })
-  editorStore.setCanvas(canvasRef)
-  workspace.value = null
-  // 选择器样式
-  initControls(canvasRef)
-  // 辅助线
-  initAligningGuidelines(canvasRef)
-  initBackground(canvasRef)
-  initWorkspace(canvasRef)
-
+  editor = new Editor()
+  canvasRef = editor.canvas
+  editorStore.setEditor(editor)
   canvasRef.on({
     'mouse:down': mouseDown,
     'mouse:up': mouseUp,
@@ -370,11 +282,10 @@ onMounted(() => {
     'object:added': updateCanvasState
   })
 
+  // 初始化组件选择
   uni.$on('initCurrentCom', () =>
-    setCurrentCom({ showPop: false, firstIndex: -1 })
+    setCurrentCom({ showPop: false, comType: TabItem.template })
   )
-
-  createFontCSS(fontsList)
 })
 
 function mouseDown() {
@@ -394,14 +305,14 @@ function mouseDown() {
         opacity: activeObj.opacity
       }
 
-      setCurrentCom({ showPop: true, firstIndex: 1 })
+      setCurrentCom({ showPop: true, comType: TabItem.text })
     } else if (['image', 'clipImage'].includes(activeObj.get('type'))) {
       // setCurrentImageBox({ ...currentImageBox, opacity: activeObj.opacity })
       // setSliderFitterValue()
-      setCurrentCom({ showPop: true, firstIndex: 2 })
+      setCurrentCom({ showPop: true, comType: TabItem.image })
     }
   } else {
-    setCurrentCom({ firstIndex: -1, showPop: false })
+    setCurrentCom({ comType: TabItem.template, showPop: false })
   }
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -419,12 +330,13 @@ function updateCanvasState() {
 
 // 插入原色
 function insertElement(type: ElementType, url?: any) {
+  const size = editor.workspacePlugin?.workspaceSize
   let shape: any = null
   if (type === 'Textbox') {
     shape = new fabric[type](guid(), {
       ...baseShapeConfig[type],
-      left: size[0] / 2 - 75,
-      top: size[1] / 2 - 20
+      left: size.width / 2 - 75,
+      top: size.height / 2 - 20
     })
     currentFont.value = shape.fontFamily
     currentTextBox.value = {
@@ -441,15 +353,15 @@ function insertElement(type: ElementType, url?: any) {
     fabric.Image.fromURL(url, function (oImg: any) {
       oImg.scale(1).set({
         ...baseShapeConfig[type],
-        left: (size[0] - oImg.width * (size[0] / (2 * oImg.width))) / 2,
-        top: (size[1] - oImg.height * (size[0] / (2 * oImg.width))) / 2,
+        left: (size.width - oImg.width * (size.width / (2 * oImg.width))) / 2,
+        top: (size.height - oImg.height * (size.width / (2 * oImg.width))) / 2,
         angle: 0,
-        scaleX: size[0] / (2 * oImg.width), //按照默认的尺寸宽度为200的尺寸处理图片添加，所以此处计算原图宽和200的比例，进行缩放
-        scaleY: size[0] / (2 * oImg.width) //纵向缩放比以横向比例为主
+        scaleX: size.width / (2 * oImg.width), //按照默认的尺寸宽度为200的尺寸处理图片添加，所以此处计算原图宽和200的比例，进行缩放
+        scaleY: size.width / (2 * oImg.width) //纵向缩放比以横向比例为主
       })
       canvasRef.add(oImg).setActiveObject(oImg)
     })
-    setCurrentCom({ showPop: true, firstIndex: 2 })
+    setCurrentCom({ showPop: true, comType: TabItem.image })
     return
   }
   canvasRef.add(shape).setActiveObject(shape) // 添加并设置激活
@@ -463,24 +375,9 @@ function renderJson(id: string) {
   downFontByJSON(tplsV[id].json).then(() => {
     canvasRef.loadFromJSON(tplsV[id].json, () => {
       canvasRef.renderAll.bind(canvasRef)
-      setNewSize()
+      editor.workspacePlugin?.resetWorkspace()
     })
   })
-}
-
-// 重置画布
-function setNewSize() {
-  // 重新设置workspace
-  workspace.value = canvasRef
-    .getObjects()
-    .find((item: any) => item.id === 'workspace') as fabric.Rect
-  if (workspace.value) {
-    option.width = workspace.value.width as number
-    option.height = workspace.value.height as number
-    workspace.value.set('width', workspace.value.width)
-    workspace.value.set('height', workspace.value.height)
-  }
-  setZoomAuto(1)
 }
 
 // 清空画布

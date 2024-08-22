@@ -1,3 +1,11 @@
+/*
+ * @Author: June
+ * @Description:
+ * @Date: 2024-08-22 18:18:34
+ * @LastEditTime: 2024-08-22 18:32:58
+ * @LastEditors: June
+ * @FilePath: \mobile-fabric-editor\src\store\modules\editor.ts
+ */
 import { defineStore } from 'pinia'
 
 const useEditorStore: any = defineStore({
@@ -5,12 +13,16 @@ const useEditorStore: any = defineStore({
   state: () => {
     return {
       currentFont: '',
-      canvas: null
+      canvas: null,
+      editor: null
     }
   },
   actions: {
     setCanvas(canvas: any) {
       this.canvas = canvas
+    },
+    setEditor(editor: any) {
+      this.editor = editor
     },
     setCurrentFont(font: string) {
       this.currentFont = font
@@ -19,3 +31,7 @@ const useEditorStore: any = defineStore({
 })
 
 export default useEditorStore
+
+export function useEditorStoreSide() {
+  return useEditorStore()
+}

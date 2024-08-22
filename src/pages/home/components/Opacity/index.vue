@@ -2,9 +2,9 @@
  * @Author: June
  * @Description: 
  * @Date: 2024-08-15 20:26:05
- * @LastEditTime: 2024-08-17 22:43:05
+ * @LastEditTime: 2024-08-17 22:46:39
  * @LastEditors: June
- * @FilePath: \mobile-fabric-editor\src\pages\home\components\Opacity\index.vue
+ * @FilePath: \mine-pro\packages\editor\src\pages\home\components\Opacity\index.vue
 -->
 <template>
   <wd-popup
@@ -73,7 +73,6 @@ const open = () => {
     curOpacity.value = _opacity * 100
   })
 }
-
 const close = () => {
   curOpacity.value = 1
   show.value = false

@@ -2,7 +2,7 @@
  * @Author: June
  * @Description: 
  * @Date: 2024-08-15 15:45:58
- * @LastEditTime: 2024-08-16 13:18:35
+ * @LastEditTime: 2024-08-18 12:09:47
  * @LastEditors: June
  * @FilePath: \mine-pro\packages\editor\src\pages\home\components\Arrow\index.vue
 -->
@@ -21,8 +21,12 @@
         :key="item.name"
         @click="directionMove(index + 1)"
       >
-        <image class="w-44rpx h-44rpx" :src="item.icon" />
-        <text class="text-#fff text-26rpx mt-8rpx">{{ item.name }}</text>
+        <SvgIcon
+          :style="{ width: '48rpx', height: '48rpx' }"
+          color="#fff"
+          :name="item.icon"
+        />
+        <text class="text-#fff text-26rpx mt-10rpx">{{ item.name }}</text>
       </view>
     </view>
   </wd-popup>
@@ -30,19 +34,15 @@
 
 <script lang="ts" setup>
 import { throttle } from 'lodash-es'
-import icon1 from '@/static/images/left.png'
-import icon2 from '@/static/images/up.png'
-import icon3 from '@/static/images/right.png'
-import icon4 from '@/static/images/down.png'
 import { useEditorStore } from '@/store'
 
 const editorStore = useEditorStore()
 const activeObj = computed(() => editorStore.canvas.getActiveObject())
 const list = [
-  { icon: icon1, name: '左移' },
-  { icon: icon2, name: '上移' },
-  { icon: icon3, name: '右移' },
-  { icon: icon4, name: '下移' }
+  { icon: 'arrow_left', name: '左移' },
+  { icon: 'arrow_top', name: '上移' },
+  { icon: 'arrow_right', name: '右移' },
+  { icon: 'arrow_bottom', name: '下移' }
 ]
 
 const directionMove = throttle(function (index: number) {

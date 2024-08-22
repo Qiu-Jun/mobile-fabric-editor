@@ -2,9 +2,9 @@
  * @Author: June
  * @Description: 
  * @Date: 2024-08-15 20:26:05
- * @LastEditTime: 2024-08-15 22:17:49
+ * @LastEditTime: 2024-08-17 21:10:38
  * @LastEditors: June
- * @FilePath: \editor\src\pages\home\components\ImageCom\components\Flip.vue
+ * @FilePath: \mine-pro\packages\editor\src\pages\home\components\ImageCom\components\Flip.vue
 -->
 <template>
   <wd-popup
@@ -21,8 +21,12 @@
         :key="index"
         @click="flipTap(index)"
       >
-        <image class="w-44rpx h-44rpx" :src="item.icon" />
-        <text class="text-#fff text-26rpx mt-8rpx">{{ item.name }}</text>
+        <SvgIcon
+          :style="{ width: '48rpx', height: '48rpx' }"
+          color="#fff"
+          :name="item.icon"
+        />
+        <text class="text-#fff text-26rpx mt-10rpx">{{ item.name }}</text>
       </view>
     </view>
   </wd-popup>
@@ -30,15 +34,13 @@
 
 <script lang="ts" setup>
 import { debounce } from 'lodash-es'
-import icon5 from '@/static/images/hf.png'
-import icon6 from '@/static/images/vf.png'
 import { useEditorStore } from '@/store'
 
 const editorStore = useEditorStore()
 const activeObj = computed(() => editorStore.canvas.getActiveObject())
 const flipList = [
-  { icon: icon5, name: '水平翻转' },
-  { icon: icon6, name: '垂直翻转' }
+  { icon: 'vf', name: '水平翻转' },
+  { icon: 'hf', name: '垂直翻转' }
 ]
 
 const flipTap = debounce(function (index: number) {

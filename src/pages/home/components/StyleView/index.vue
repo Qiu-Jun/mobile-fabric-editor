@@ -14,8 +14,16 @@
           :key="index"
           @click="handleMenu(index)"
         >
-          <image class="w-44rpx h-44rpx" :src="item.icon" />
-          <text class="text-#fff text-26rpx mt-8rpx">{{ item.name }}</text>
+          <SvgIcon
+            :style="{ width: '48rpx', height: '48rpx' }"
+            :color="item.isActive ? '#fff' : '#999'"
+            :name="item.icon"
+          />
+          <text
+            class="text-26rpx mt-8rpx"
+            :class="[item.isActive ? 'text-#fff' : 'text-#999']"
+            >{{ item.name }}</text
+          >
         </view>
       </view>
       <view class="f-center w-full mb-20rpx w-full box-border p-20rpx">
@@ -38,21 +46,16 @@
 
 <script lang="ts" setup>
 import { debounce, throttle } from 'lodash-es'
-import bIcon from '@/static/images/b.png'
-import bA from '@/static/images/b_a.png'
-import xIcon from '@/static/images/x.png'
-import xA from '@/static/images/x_a.png'
-import uIcon from '@/static/images/u.png'
-import uA from '@/static/images/u_a.png'
 import { useEditorStore } from '@/store'
 
 const editorStore = useEditorStore()
 const activeObj = computed(() => editorStore.canvas.getActiveObject())
-const styleList = [
-  { icon: bIcon, acIcon: bA, name: '加粗' },
-  { icon: xIcon, acIcon: xA, name: '斜体' },
-  { icon: uIcon, acIcon: uA, name: '下划线' }
-]
+const current = ref(0) // 0 加粗   1 斜体   2 下划线
+const styleList = ref([
+  { icon: 'font_bold', name: '加粗', isActive: false },
+  { icon: 'italic', name: '斜体', isActive: false },
+  { icon: 'underline', name: '下划线', isActive: false }
+])
 
 const updateAttr = (
   type:
@@ -79,21 +82,22 @@ const state = reactive({
   underline: false
 })
 const handleMenu = debounce(function (index: number) {
+  current.value = index
   switch (index) {
     case 0:
-      updateAttr(
-        'fontWeight',
-        state.fontWeight === 'normal' ? 'bold' : 'normal'
-      )
+      state.fontWeight = state.fontWeight === 'normal' ? 'bold' : 'normal'
+      styleList.value[index].isActive = state.fontWeight === 'bold'
+      updateAttr('fontWeight', state.fontWeight)
       break
     case 1:
-      updateAttr(
-        'fontStyle',
-        state.fontStyle === 'normal' ? 'italic' : 'normal'
-      )
+      state.fontStyle = state.fontStyle === 'normal' ? 'italic' : 'normal'
+      styleList.value[index].isActive = state.fontStyle === 'italic'
+      updateAttr('fontStyle', state.fontStyle)
       break
     case 2:
-      updateAttr('underline', !state.underline)
+      state.underline = !state.underline
+      styleList.value[index].isActive = state.underline
+      updateAttr('underline', state.underline)
       break
     default:
       break
@@ -114,10 +118,14 @@ const open = () => {
     state.fontWeight = _activeObj.get('fontWeight') || 'normal'
     state.fontStyle = _activeObj.get('fontStyle') || 'normal'
     state.underline = _activeObj.get('underline') || false
+    styleList.value[0].isActive = state.fontWeight === 'bold'
+    styleList.value[1].isActive = state.fontStyle === 'italic'
+    styleList.value[2].isActive = state.underline
   })
 }
 
 const close = () => {
+  current.value = 0
   show.value = false
 }
 

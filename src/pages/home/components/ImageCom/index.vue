@@ -2,7 +2,7 @@
  * @Author: June
  * @Description: 
  * @Date: 2024-08-15 13:59:45
- * @LastEditTime: 2024-08-16 12:20:44
+ * @LastEditTime: 2024-08-18 14:21:42
  * @LastEditors: June
  * @FilePath: \mine-pro\packages\editor\src\pages\home\components\ImageCom\index.vue
 -->
@@ -21,13 +21,17 @@
     >
       <view
         class="inline-block h-full py-40rpx"
-        v-for="(item, index) in list"
-        :key="index"
-        @click="handleMenu(index)"
+        v-for="item in ImageTabList"
+        :key="item.type"
+        @click="handleMenu(item.type)"
       >
         <view class="f-center flex-col w-120rpx h-full">
-          <image class="w-44rpx h-44rpx mb-8rpx" :src="item.icon" />
-          <text class="text-26rpx mt-8rpx text-#fff">{{ item.name }}</text>
+          <SvgIcon
+            :style="{ width: '48rpx', height: '48rpx' }"
+            :name="item.icon"
+            color="#fff"
+          />
+          <text class="text-26rpx mt-10rpx text-#fff">{{ item.name }}</text>
         </view>
       </view>
     </scroll-view>
@@ -38,7 +42,6 @@
   <Arrow ref="arrowRef" />
   <Layer ref="layerRef" />
   <Opacity ref="opacityRef" />
-  <!-- <component :ref="setItemRef" :is="comMap[comKey]" /> -->
 </template>
 
 <script lang="ts" setup>
@@ -48,16 +51,9 @@ import Arrow from '../Arrow/index.vue'
 import Layer from '../Layer/index.vue'
 import Opacity from '../Opacity/index.vue'
 import { debounce } from 'lodash-es'
-import icon1 from '@/static/images/1.png'
-import icon2 from '@/static/images/dis.png'
-import icon3 from '@/static/images/5.png'
-import icon4 from '@/static/images/fz1.png'
-import icon7 from '@/static/images/copy.png'
-import icon8 from '@/static/images/mul.png'
-import icon9 from '@/static/images/jian.png'
-import icon10 from '@/static/images/lvj.png'
 import { isIPhoneX } from '@/utils/tools'
-
+import { ImgTab } from '@/enums'
+import { ImageTabList } from '@/constants/tabs'
 import { useEditorStore } from '@/store'
 
 const flipRef = ref()
@@ -68,32 +64,7 @@ const opacityRef = ref()
 const editorStore = useEditorStore()
 const activeObj = computed(() => editorStore.canvas.getActiveObject())
 const _isIPhoneX = isIPhoneX()
-const list = [
-  { icon: icon7, name: '复制' },
-  { icon: icon1, name: '换图' },
-  { icon: icon10, name: '滤镜' },
-  { icon: icon8, name: '图层' },
-  { icon: icon4, name: '翻转' },
-  { icon: icon3, name: '透明度' },
-  { icon: icon2, name: '微调' }
-]
 
-// type IComKey = 'flip' | 'filter' | 'arrow' | 'layer' | 'opacity' | 'default'
-// const comKey = ref<IComKey>('default')
-// const comMap: Record<IComKey, any> = {
-//   flip: Flip,
-//   filter: Filter,
-//   arrow: Arrow,
-//   layer: Layer,
-//   opacity: Opacity,
-//   default: null
-// }
-// const refMap: Record<IComKey, any> = {}
-// const setItemRef = (el: any) => {
-//   if (el && !refMap[comKey.value]) {
-//     refMap[comKey.value] = el
-//   }
-// }
 const paste = (_clipboard: any) => {
   _clipboard.clone(function (clonedObj: any) {
     editorStore.canvas.discardActiveObject()
@@ -117,16 +88,16 @@ const paste = (_clipboard: any) => {
   })
 }
 
-const handleMenu = debounce(function (index: number) {
+const handleMenu = debounce(function (type: string) {
   const _activeObj = unref(activeObj)
-  switch (index) {
-    case 0:
+  switch (type) {
+    case ImgTab.copy:
       _activeObj.clone(function (cloned: any) {
         paste(cloned)
       })
       editorStore.canvas.renderAll()
       break
-    case 1:
+    case ImgTab.image:
       uni.chooseImage({
         count: 1,
         sizeType: ['compressed'], // 可以指定是原图还是压缩图，默认二者都有
@@ -149,20 +120,20 @@ const handleMenu = debounce(function (index: number) {
         }
       })
       break
-    case 2:
+    case ImgTab.filters:
       // 滤镜
       filterRef.value?.open()
       break
-    case 3:
+    case ImgTab.layer:
       layerRef.value?.open()
       break
-    case 4:
+    case ImgTab.flip:
       flipRef.value?.open()
       break
-    case 5:
+    case ImgTab.opacity:
       opacityRef.value?.open()
       break
-    case 6:
+    case ImgTab.tuning:
       arrowRef.value?.open()
       break
     default:

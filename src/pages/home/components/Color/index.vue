@@ -2,7 +2,7 @@
  * @Author: June
  * @Description: 
  * @Date: 2024-08-15 15:55:40
- * @LastEditTime: 2024-08-16 12:26:54
+ * @LastEditTime: 2024-08-20 04:28:19
  * @LastEditors: June
  * @FilePath: \mine-pro\packages\editor\src\pages\home\components\Color\index.vue
 -->
@@ -31,12 +31,16 @@
                   ? '#fff'
                   : 'transparent'
                 : curColor == item
-                ? '#fff'
-                : 'transparent'
+                  ? '#fff'
+                  : 'transparent'
           }"
         >
           <template v-if="index === 0">
-            <image :src="tmIcon" class="w-60rpx h-60rpx rounded-30rpx" />
+            <SvgIcon
+              class="w-60rpx h-60rpx rounded-30rpx"
+              :style="{ width: '60rpx', height: '60rpx' }"
+              name="transparent"
+            />
           </template>
           <template v-else>
             <view
@@ -52,8 +56,7 @@
 
 <script lang="ts" setup>
 import { debounce } from 'lodash-es'
-import tmIcon from '@/static/images/tm.png'
-import { colors } from '../../constants'
+import { colors } from '@/constants/editor'
 import { useEditorStore } from '@/store'
 
 const editorStore = useEditorStore()

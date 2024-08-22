@@ -2,9 +2,9 @@
  * @Author: June
  * @Description: 
  * @Date: 2024-08-16 12:40:31
- * @LastEditTime: 2024-08-18 13:11:19
+ * @LastEditTime: 2024-08-18 13:08:42
  * @LastEditors: June
- * @FilePath: \mobile-fabric-editor\src\pages\home\components\FontView\index.vue
+ * @FilePath: \mine-pro\packages\editor\src\pages\home\components\FontView\index.vue
 -->
 <template>
   <wd-popup
@@ -43,7 +43,7 @@
 <script lang="ts" setup>
 import { debounce } from 'lodash-es'
 import FontFaceObserver from 'fontfaceobserver'
-import { fontsList } from '../../constants'
+import { fontsList } from '@/constants/editor'
 import { useEditorStore } from '@/store'
 
 const editorStore = useEditorStore()
@@ -82,6 +82,7 @@ const handleCancel = debounce(close, 250)
 const handleFont = debounce(function (index: number) {
   curIndex.value = index
 }, 250)
+
 const handleConfirm = debounce(function () {
   const _curIndex = unref(curIndex)
   const fontName = fontsList[_curIndex].name
