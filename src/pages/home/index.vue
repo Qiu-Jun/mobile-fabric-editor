@@ -2,7 +2,7 @@
  * @Author: June
  * @Description: 
  * @Date: 2024-08-17 19:18:03
- * @LastEditTime: 2024-08-22 18:28:57
+ * @LastEditTime: 2024-08-23 02:39:47
  * @LastEditors: June
  * @FilePath: \mobile-fabric-editor\src\pages\home\index.vue
 -->
@@ -12,7 +12,11 @@
     <view
       class="bg-#373b4a h-90rpx absolute left-0 top-0 w-100vw flex flex-row justify-between items-center"
     >
-      <view class="flex flex-row items-center justify-start px-10px"> </view>
+      <view class="flex flex-row items-center justify-start px-10px">
+        <wd-button class="mx-10rpx" size="small" @click="handleMaterial">
+          素材
+        </wd-button>
+      </view>
       <view class="flex flex-row items-center justify-end px-10px">
         <SvgIcon
           class="mr-10rpx"
@@ -80,7 +84,7 @@
   </view>
 
   <Templates ref="tempRef" @select="onSelectTemp" />
-
+  <Material ref="materialRef" @select="onMaterial" />
   <!-- 预览 -->
   <wd-overlay class="f-center" :show="imgUrlInfo.showImg">
     <view class="relative">
@@ -97,6 +101,7 @@
 
 <script lang="ts" setup>
 import Templates from './components/Templates/index.vue'
+import Material from './components/Material/index.vue'
 import FontCom from './components/FontCom/index.vue'
 import ImageCom from './components/ImageCom/index.vue'
 import Background from './components/Background/index.vue'
@@ -107,6 +112,8 @@ import { Editor } from '@/core/editor'
 import { TabItem } from '@/enums'
 import { HomeTabList } from '@/constants/tabs'
 import { useEditorStore } from '@/store'
+import { LinePoolItem } from '@/constants/lines'
+import { useHandleCreate } from '@/hooks/useHandleCreate'
 
 const editorStore = useEditorStore()
 
@@ -209,6 +216,31 @@ const onSelectTemp = (item: any) => {
   item.id && renderJson(item.id)
 }
 // 模板相关 end
+
+// 素材相关 start
+const materialRef = ref()
+const { createLineElement } = useHandleCreate()
+const handleMaterial = debounce(function () {
+  materialRef.value?.open()
+}, 250)
+const drawLine = (line: LinePoolItem) => {
+  const strokeDashArray: [number, number] | undefined =
+    line.style === 'dashed' ? [6, 6] : undefined
+  const element = createLineElement(
+    line.data,
+    line.points[0],
+    line.points[1],
+    strokeDashArray
+  )
+  canvasRef.add(element)
+  canvasRef.setActiveObject(element)
+  canvasRef.renderAll()
+  updateCanvasState()
+}
+const onMaterial = (item: LinePoolItem) => {
+  drawLine(item)
+}
+// 素材相关end
 
 // 字体相关 start
 const currentFont = ref('')

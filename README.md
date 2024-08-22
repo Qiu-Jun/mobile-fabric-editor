@@ -3,7 +3,7 @@
  * @Author: June
  * @Date: 2024-04-24 09:32:13
  * @FilePath: \mobile-fabric-editor\README.md
- * @LastEditTime: 2024-08-17 19:06:34
+ * @LastEditTime: 2024-08-23 00:36:01
  * @LastEditors: June
 -->
 
@@ -14,6 +14,8 @@
 |   --      | --      |   --     |   --     |
 | 开源版    |     √   |    ×     |    ×      |
 | 非开源版  |     √   |    √     |    √      |
+
+## 本人与[yft作者](https://github.com/more-strive)支持各种软件定制开发， 欢迎联系。
 
 #### 技术栈
 - H5编辑器

@@ -2,7 +2,7 @@
  * @Author: June
  * @Description:
  * @Date: 2024-08-14 22:12:49
- * @LastEditTime: 2024-08-22 18:27:07
+ * @LastEditTime: 2024-08-23 01:13:56
  * @LastEditors: June
  * @FilePath: \mobile-fabric-editor\vite.config.ts
  */

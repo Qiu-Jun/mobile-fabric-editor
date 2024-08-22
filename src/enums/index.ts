@@ -35,3 +35,29 @@ export enum TextTab {
   tuning = 'Tuning',
   layer = 'Layer'
 }
+
+export enum ElementNames {
+  TEXTBOX = 'textbox',
+  TEXT = 'text',
+  ITEXT = 'i-text',
+  INPUTTEXT = 'itext',
+  ARCTEXT = 'arctext',
+  VERTICALTEXT = 'verticaltext',
+  IMAGE = 'image',
+  SVGIMAGE = 'svgimage',
+  CROPIMAGE = 'cropimage',
+  MASK = 'mask',
+  PATH = 'path',
+  RECT = 'rect',
+  LINE = 'line',
+  ARROW = 'arrow',
+  POLYLINE = 'polyline',
+  ELLIPSE = 'ellipse',
+  QRCODE = 'qrcode',
+  BARCODE = 'barcode',
+  GROUP = 'group',
+  ACTIVE = 'activeselection',
+  CIRCLE = 'circle',
+  REFERENCELINE = 'referenceline',
+  DOT = 'dot'
+}
