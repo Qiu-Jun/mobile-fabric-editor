@@ -3,7 +3,7 @@
  * @Author: June
  * @Date: 2024-04-24 09:32:13
  * @FilePath: \mobile-fabric-editor\README.md
- * @LastEditTime: 2024-08-23 00:36:01
+ * @LastEditTime: 2024-08-26 20:36:31
  * @LastEditors: June
 -->
 
@@ -17,11 +17,17 @@
 
 ## 本人与[yft作者](https://github.com/more-strive)支持各种软件定制开发， 欢迎联系。
 
+ [编辑器ai功能预览(静态资源有流量限制)](https://www.xiaohongshu.com/discovery/item/66cb510c000000001f015818?app_platform=ios&app_version=8.50.1&share_from_user_hidden=true&xsec_source=app_share&type=video&xsec_token=CBKPm6Xe0y0EyYcujWsjQzwH7BDRSu1mvEIAnV97RNzfU=&author_share=1&xhsshare=CopyLink&shareRedId=ODk0NUg9PEo2NzUyOTgwNjg2OTpHSEpK&apptime=1724656491&share_id=10b97c21d4cc4044b423b7c214829178)
+
+![后台页面](./previews/admin.png)
+
 #### 技术栈
 - H5编辑器
   - Vue3
   - Typescript
   - uniapp
+  - ai抠图(不开源)
+  - ai修复图片(不开源)
 - 后台(不开源)
   - Vue3
   - Typescript
