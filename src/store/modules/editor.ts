@@ -2,7 +2,7 @@
  * @Author: June
  * @Description:
  * @Date: 2024-08-22 18:18:34
- * @LastEditTime: 2024-08-22 18:32:58
+ * @LastEditTime: 2024-11-23 08:24:46
  * @LastEditors: June
  * @FilePath: \mobile-fabric-editor\src\store\modules\editor.ts
  */

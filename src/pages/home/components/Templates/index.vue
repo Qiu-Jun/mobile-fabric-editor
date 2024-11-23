@@ -2,7 +2,7 @@
  * @Author: June
  * @Description: 
  * @Date: 2024-08-16 17:33:20
- * @LastEditTime: 2024-08-17 14:39:56
+ * @LastEditTime: 2024-11-23 08:26:18
  * @LastEditors: June
  * @FilePath: \mobile-fabric-editor\src\pages\home\components\Templates\index.vue
 -->
@@ -56,7 +56,7 @@ const handleSelectTemp = debounce(function (item) {
   close()
 }, 250)
 
-onMounted(() => {
+const initTemplate = () => {
   const tplsValue = JSON.parse(localStorage.getItem('tpls') || '{}')
   const tplImgs = JSON.parse(localStorage.getItem('tplImgs') || '{}')
   const _list = Object.keys(tplsValue).map((item) => ({
@@ -68,7 +68,19 @@ onMounted(() => {
     ...i,
     img: tplImgs[i.id]
   }))
-})
+}
+
+watch(
+  () => show.value,
+  (val) => {
+    if (val) {
+      initTemplate()
+    }
+  },
+  {
+    immediate: true
+  }
+)
 
 defineExpose({
   open,
