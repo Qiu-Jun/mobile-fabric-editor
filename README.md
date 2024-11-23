@@ -3,10 +3,9 @@
  * @Author: June
  * @Date: 2024-04-24 09:32:13
  * @FilePath: \mobile-fabric-editor\README.md
- * @LastEditTime: 2024-08-26 20:40:55
+ * @LastEditTime: 2024-11-23 10:21:16
  * @LastEditors: June
 -->
-
 ## mobile-fabric-editor
 
 `mobile-fabric-editor`是基于fabric的移动端简易图片编辑器, 开源版本仅有编辑器，非开源版本附带后台管理(`非开源版本，除了附带后台管理外，代码也比开源版本更优雅`)，区别如下。<br />
