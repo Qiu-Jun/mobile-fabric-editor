@@ -2,7 +2,7 @@
  * @Author: June
  * @Description: 
  * @Date: 2024-08-15 16:24:07
- * @LastEditTime: 2024-08-18 12:15:18
+ * @LastEditTime: 2024-11-27 23:49:20
  * @LastEditors: June
  * @FilePath: \mine-pro\packages\editor\src\pages\home\components\Layer\index.vue
 -->
@@ -59,6 +59,7 @@ const layerTap = debounce(function (index: number) {
       break
     case 3:
       _activeObj.sendToBack()
+      _activeObj.bringForward()
       break
     default:
       break
