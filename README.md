@@ -17,6 +17,7 @@
 ## 本人与[yft作者](https://github.com/more-strive)支持各种软件定制开发， 欢迎联系。
 
 + [编辑器ai功能预览，编辑器可以点击体验地址](https://www.bilibili.com/video/BV1LUWeerEJY/?spm_id_from=333.999.list.card_archive.click)
++ [预览](https://env-00jxgnbpjqmg-static.normal.cloudstatic.cn/editor-mobile/index.html)
 
 + 管理后台
 ![后台页面](./previews/admin.png)
