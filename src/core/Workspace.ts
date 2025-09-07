@@ -24,15 +24,18 @@ export class Workspace {
     width: 400,
     height: 300
   }
+  zoomRatio: number
   constructor(ctx: fabric.Canvas, workspaceEl: HTMLElement) {
     this.workspaceEl = workspaceEl
     this.canvas = ctx
     const infoSys = appStore.systemInfo as unknown as UniApp.SystemInfo
     const { windowWidth } = infoSys
+    this.zoomRatio = 0.85
     this.workspaceSize = {
-      width: windowWidth * 0.85,
+      width: windowWidth * this.zoomRatio,
       height: windowWidth * 1.4
     }
+
     this.initBackground()
     this.initWorkspace()
   }
@@ -63,6 +66,10 @@ export class Workspace {
     this.canvas.renderAll()
     this.workspace = workspace
     this.setZoomAuto(1)
+  }
+
+  getSize() {
+    return this.workspaceSize
   }
 
   setZoomAuto(scale: number, cb?: (left?: number, top?: number) => void) {
@@ -116,7 +123,56 @@ export class Workspace {
       .find((item: any) => item.id === 'workspace') as fabric.Rect
     this.workspace.set('width', width)
     this.workspace.set('height', height)
-    this.setZoomAuto(1)
+    this.auto()
+  }
+
+  getScale() {
+    if (!this.workspaceEl)
+      return {
+        width: 0,
+        height: 0
+      }
+    // @ts-ignore
+    return fabric.util.findScaleToFit(this.workspace, {
+      width: this.workspaceEl.offsetWidth,
+      height: this.workspaceEl.offsetHeight
+    })
+  }
+
+  // 1:1 放大
+  one() {
+    this.setZoomAuto(1 * this.zoomRatio)
+    this.canvas!.requestRenderAll()
+  }
+
+  // 放大
+  big() {
+    let zoomRatio = this.canvas?.getZoom() ?? 0
+    zoomRatio += 0.05
+    const center = this.canvas?.getCenter()
+    if (!center) return
+    this.canvas?.zoomToPoint(
+      new fabric.Point(center.left, center.top),
+      zoomRatio
+    )
+  }
+
+  // 缩小
+  small() {
+    let zoomRatio = this.canvas?.getZoom() ?? 0
+    zoomRatio -= 0.05
+    const center = this.canvas?.getCenter()
+    if (!center) return
+    this.canvas?.zoomToPoint(
+      new fabric.Point(center.left, center.top),
+      zoomRatio < 0 ? 0.01 : zoomRatio
+    )
+  }
+
+  // 自动缩放
+  auto() {
+    const scale = this.getScale()
+    this.setZoomAuto(scale * this.zoomRatio)
   }
 
   // 重新设置workspace
@@ -133,15 +189,6 @@ export class Workspace {
       this.workspace.set('height', this.workspace.height)
     }
     this.setZoomAuto(1)
-  }
-
-  getSale() {
-    if (!this.workspaceEl) return 0
-    //@ts-ignore
-    return fabric.util.findScaleToFit(this.workspace, {
-      width: this.workspaceEl.offsetWidth,
-      height: this.workspaceEl.offsetHeight
-    })
   }
 
   destroy() {

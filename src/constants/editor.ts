@@ -68,3 +68,41 @@ export interface CommonCanvasChildrenType {
   canvasRef: any
   onClose: () => void
 }
+
+export const sizeList = [
+  {
+    name: '小红书配图',
+    width: 1242,
+    height: 1660
+  },
+  {
+    name: '公众号首图',
+    width: 900,
+    height: 383
+  },
+  {
+    name: '公众号次图',
+    width: 500,
+    height: 500
+  },
+  {
+    name: '竖版直播背景',
+    width: 1242,
+    height: 1660
+  },
+  {
+    name: '竖版视频封面',
+    width: 1242,
+    height: 2208
+  },
+  {
+    name: '横板视频封面',
+    width: 1920,
+    height: 1080
+  },
+  {
+    name: '商品主图',
+    width: 800,
+    height: 800
+  }
+]

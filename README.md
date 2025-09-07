@@ -6,23 +6,25 @@
  * @LastEditTime: 2024-11-23 10:21:16
  * @LastEditors: June
 -->
+
 ## mobile-fabric-editor
 
 `mobile-fabric-editor`是基于fabric的移动端简易图片编辑器, 开源版本仅有编辑器，非开源版本附带后台管理(`非开源版本，除了附带后台管理外，代码也比开源版本更优雅`)，区别如下。<br />
-|           | 编辑器  |  小程序  |    后台   |
-|   --      | --      |   --     |   --     |
-| 开源版    |     √   |    ×     |    ×      |
-| 非开源版  |     √   |    √     |    √      |
+| | 编辑器 | 小程序 | 后台 |
+| -- | -- | -- | -- |
+| 开源版 | √ | × | × |
+| 非开源版 | √ | √ | √ |
 
 ## 本人与[yft作者](https://github.com/more-strive)支持各种软件定制开发， 欢迎联系。
 
-+ [编辑器ai功能预览，编辑器可以点击体验地址](https://www.bilibili.com/video/BV1LUWeerEJY/?spm_id_from=333.999.list.card_archive.click)
-+ [预览](https://env-00jxgnbpjqmg-static.normal.cloudstatic.cn/editor-mobile/index.html)
+- [编辑器ai功能预览，编辑器可以点击体验地址](https://www.bilibili.com/video/BV1LUWeerEJY/?spm_id_from=333.999.list.card_archive.click)
+- [预览](https://env-00jxgnbpjqmg-static.normal.cloudstatic.cn/editor-mobile/index.html)
 
-+ 管理后台
-![后台页面](./previews/admin.png)
+- 管理后台
+  ![后台页面](./previews/admin.png)
 
 #### 技术栈
+
 - H5编辑器
   - Vue3
   - Typescript

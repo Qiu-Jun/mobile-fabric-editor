@@ -18,6 +18,9 @@
         </wd-button>
       </view>
       <view class="flex flex-row items-center justify-end px-10px">
+        <wd-button class="mr-20rpx" size="small" @click="handleMenu">
+          菜单
+        </wd-button>
         <SvgIcon
           class="mr-10rpx"
           :style="{ width: '40rpx', height: '40rpx' }"
@@ -85,6 +88,7 @@
 
   <Templates ref="tempRef" @select="onSelectTemp" />
   <Material ref="materialRef" @select="onMaterial" />
+  <Size v-model:show="dialogState.size" />
   <!-- 预览 -->
   <wd-overlay class="f-center" :show="imgUrlInfo.showImg">
     <view class="relative">
@@ -97,6 +101,13 @@
       <image class="w-710rpx" mode="widthFix" :src="imgUrlInfo.imgUrl" />
     </view>
   </wd-overlay>
+
+  <wd-action-sheet
+    v-model="showAction"
+    :actions="actions"
+    @close="showAction = false"
+    @select="onSelectAction"
+  />
 </template>
 
 <script lang="ts" setup>
@@ -105,6 +116,7 @@ import Material from './components/Material/index.vue'
 import FontCom from './components/FontCom/index.vue'
 import ImageCom from './components/ImageCom/index.vue'
 import Background from './components/Background/index.vue'
+import Size from './components/Size/index.vue'
 import { fabric } from 'fabric'
 import { debounce } from 'lodash-es'
 import { isIPhoneX, guid, downFontByJSON } from '@/utils/tools'
@@ -123,6 +135,11 @@ type ICurrentCom = {
   showPop: boolean
   comType: TabType
 }
+
+const dialogState = reactive({
+  size: false,
+  ai: false
+})
 
 const baseShapeConfig = {
   Textbox: {
@@ -302,6 +319,44 @@ const handleOperate = debounce(function (type: TabType) {
       break
   }
 }, 250)
+
+// 菜单 start
+const showAction = ref(false)
+const actions = ref([
+  {
+    name: '尺寸',
+    color: '#0083ff'
+  },
+  {
+    name: '清空画布',
+    color: '#f34250'
+  }
+])
+const handleMenu = debounce(function () {
+  showAction.value = true
+}, 250)
+const onSelectAction = ({ index }: { index: number }) => {
+  switch (index) {
+    case 0: // 尺寸
+      dialogState.size = true
+      break
+    case 2: // 素材
+      uni.showModal({
+        titl: '提示',
+        content: '您确定清空画布吗？',
+        cancelText: '取消',
+        confirmColor: '立即清空',
+        success: (res) => {
+          res.confirm && editor?.clear()
+        }
+      })
+
+      break
+    default:
+      break
+  }
+}
+// 菜单 end
 
 onMounted(() => {
   editor = new Editor()
