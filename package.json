@@ -30,6 +30,7 @@
     "@dcloudio/uni-mp-weixin": "3.0.0-alpha-4070620250731002",
     "@dcloudio/uni-mp-xhs": "3.0.0-alpha-4070620250731002",
     "@dcloudio/uni-quickapp-webview": "3.0.0-alpha-4070620250731002",
+    "color-gradient-picker-vue3": "^3.1.1",
     "editor": "link:",
     "fabric": "^5.4.0",
     "fontfaceobserver": "^2.3.0",
