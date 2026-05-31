@@ -7,10 +7,17 @@
  * @FilePath: \mobile-fabric-editor\src\store\modules\editor.ts
  */
 import { defineStore } from 'pinia'
+import type { Editor } from '@/core/editor'
 
-const useEditorStore: any = defineStore({
+interface EditorState {
+  currentFont: string
+  canvas: fabric.Canvas | null
+  editor: Editor | null
+}
+
+const useEditorStore = defineStore({
   id: 'editor', // id必填，且需要唯一
-  state: () => {
+  state: (): EditorState => {
     return {
       currentFont: '',
       canvas: null,
@@ -18,10 +25,10 @@ const useEditorStore: any = defineStore({
     }
   },
   actions: {
-    setCanvas(canvas: any) {
+    setCanvas(canvas: fabric.Canvas | null) {
       this.canvas = canvas
     },
-    setEditor(editor: any) {
+    setEditor(editor: Editor | null) {
       this.editor = editor
     },
     setCurrentFont(font: string) {
@@ -31,7 +38,3 @@ const useEditorStore: any = defineStore({
 })
 
 export default useEditorStore
-
-export function useEditorStoreSide() {
-  return useEditorStore()
-}

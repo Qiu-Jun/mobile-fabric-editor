@@ -10,9 +10,7 @@
 import FontFaceObserver from 'fontfaceobserver'
 import { fontsList } from '@/constants/editor'
 import { intersectionWith, isEqual } from 'lodash-es'
-import { useAppStoreSide } from '@/store/modules/app'
-
-const appStore = useAppStoreSide()
+import { useAppStore } from '@/store'
 
 export const testUA = (str: string) => {
   return navigator.userAgent.indexOf(str) > -1
@@ -32,8 +30,6 @@ export const isIPhoneX = () => {
         testUA('iPhone')) ||
       (window.devicePixelRatio &&
         window.devicePixelRatio === 3 &&
-        window.devicePixelRatio &&
-        window.devicePixelRatio === 3 &&
         window.screen.height === 844 &&
         testUA('iPhone')) ||
       (window.devicePixelRatio &&
@@ -46,7 +42,8 @@ export const isIPhoneX = () => {
         testUA('iPhone'))
     )
   }
-  const { model } = appStore.systemInfo as unknown as UniApp.SystemInfo
+  const appStore = useAppStore()
+  const { model } = (appStore.systemInfo as UniApp.SystemInfo) ?? { model: '' }
   return (
     model.search('iPhone X') != -1 ||
     model.search('11') != -1 ||

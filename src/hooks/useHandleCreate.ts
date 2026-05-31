@@ -1,8 +1,9 @@
 import { fabric } from 'fabric'
 import { ElementNames } from '@/enums'
 import { guid } from '@/utils/tools'
+import type { LinePoint } from '@/constants/lines'
 
-export type LinePoint = '' | 'arrow' | 'dot'
+export type { LinePoint }
 
 export function useHandleCreate() {
   const createLineElement = (

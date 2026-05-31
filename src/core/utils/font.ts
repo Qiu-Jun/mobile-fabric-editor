@@ -21,8 +21,7 @@ export function createFontCSS(arr: any[]) {
   const style = document.createElement('style')
   try {
     style.appendChild(document.createTextNode(code))
-  } catch (error) {
-    console.log(error)
+  } catch {
     // style.styleSheet.cssText = code;
   }
   const head = document.getElementsByTagName('head')[0]

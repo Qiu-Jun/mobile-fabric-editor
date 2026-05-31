@@ -3,9 +3,13 @@
  * @param { keyName }
  * @return { storageVal }
  */
-export function getStorageSync(key: string) {
-  const val = uni.getStorageSync(key) || null
-  return val ? JSON.parse(val) : null
+export function getStorageSync<T = unknown>(key: string): T | null {
+  try {
+    const val = uni.getStorageSync(key) || null
+    return val ? JSON.parse(val) : null
+  } catch {
+    return null
+  }
 }
 
 /**
@@ -13,7 +17,7 @@ export function getStorageSync(key: string) {
  * @param { String } key
  * @param { any } val
  */
-export function setStorageSync(key: string, val: any) {
+export function setStorageSync(key: string, val: unknown) {
   const value = JSON.stringify(val)
   return uni.setStorageSync(key, value)
 }
@@ -23,11 +27,14 @@ export function setStorageSync(key: string, val: any) {
  * @param { String } key
  * @param { any } val
  */
-export function setStorage(key: string, val: any) {
+export function setStorage(key: string, val: unknown) {
   const value = JSON.stringify(val)
   uni.setStorage({
     key,
-    data: value
+    data: value,
+    fail: (err) => {
+      console.error(`存储失败 [${key}]:`, err)
+    }
   })
 }
 
@@ -39,7 +46,7 @@ export function removeStorageSync(key: string) {
   try {
     return uni.removeStorageSync(key)
   } catch (e) {
-    console.log(`移除失败${e}`)
+    console.error(`移除失败 [${key}]:`, e)
   }
 }
 

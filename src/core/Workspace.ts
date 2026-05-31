@@ -7,9 +7,8 @@
  * @FilePath: \mobile-fabric-editor\src\core\Workspace.ts
  */
 import { fabric } from 'fabric'
-import { useAppStoreSide } from '@/store/modules/app'
-
-const appStore = useAppStoreSide()
+import { useAppStore } from '@/store'
+import { WORKSPACE } from '@/constants/canvas'
 
 export interface IWorkspaceSize {
   width: number
@@ -28,12 +27,15 @@ export class Workspace {
   constructor(ctx: fabric.Canvas, workspaceEl: HTMLElement) {
     this.workspaceEl = workspaceEl
     this.canvas = ctx
-    const infoSys = appStore.systemInfo as unknown as UniApp.SystemInfo
-    const { windowWidth } = infoSys
-    this.zoomRatio = 0.85
+    const appStore = useAppStore()
+    const infoSys = appStore.systemInfo
+    const windowWidth = infoSys
+      ? (infoSys as UniApp.SystemInfo).windowWidth
+      : 375
+    this.zoomRatio = WORKSPACE.DEFAULT_ZOOM_RATIO
     this.workspaceSize = {
       width: windowWidth * this.zoomRatio,
-      height: windowWidth * 1.4
+      height: windowWidth * WORKSPACE.DEFAULT_ASPECT_RATIO
     }
 
     this.initBackground()
@@ -113,7 +115,8 @@ export class Workspace {
   }
 
   setSize(width: number, height: number) {
-    const canvas = this.canvas!
+    const canvas = this.canvas
+    if (!canvas) return
     this.initBackground()
     this.workspaceSize.width = width
     this.workspaceSize.height = height
@@ -121,6 +124,7 @@ export class Workspace {
     this.workspace = canvas
       .getObjects()
       .find((item: any) => item.id === 'workspace') as fabric.Rect
+    if (!this.workspace) return
     this.workspace.set('width', width)
     this.workspace.set('height', height)
     this.auto()
@@ -141,8 +145,9 @@ export class Workspace {
 
   // 1:1 放大
   one() {
+    if (!this.canvas) return
     this.setZoomAuto(1 * this.zoomRatio)
-    this.canvas!.requestRenderAll()
+    this.canvas.requestRenderAll()
   }
 
   // 放大
@@ -171,6 +176,7 @@ export class Workspace {
 
   // 自动缩放
   auto() {
+    if (!this.canvas) return
     const scale = this.getScale()
     this.setZoomAuto(scale * this.zoomRatio)
   }

@@ -46,10 +46,9 @@
 
 <script lang="ts" setup>
 import { debounce, throttle } from 'lodash-es'
-import { useEditorStore } from '@/store'
+import { useCanvasObject } from '@/hooks/useCanvasObject'
 
-const editorStore = useEditorStore()
-const activeObj = computed(() => editorStore.canvas.getActiveObject())
+const { activeObj, updateAttr } = useCanvasObject()
 const current = ref(0) // 0 加粗   1 斜体   2 下划线
 const styleList = ref([
   { icon: 'font_bold', name: '加粗', isActive: false },
@@ -57,24 +56,6 @@ const styleList = ref([
   { icon: 'underline', name: '下划线', isActive: false }
 ])
 
-const updateAttr = (
-  type:
-    | 'fill'
-    | 'fontStyle'
-    | 'fontWeight'
-    | 'opacity'
-    | 'fontSize'
-    | 'underline'
-    | 'fontFamily'
-    | 'stroke'
-    | 'strokeWidth'
-    | 'imgUrl',
-  val: any
-) => {
-  const obj = unref(activeObj)
-  obj.set({ [type]: val })
-  editorStore.canvas.renderAll()
-}
 const state = reactive({
   fontSize: 0,
   fontWeight: 'normal',

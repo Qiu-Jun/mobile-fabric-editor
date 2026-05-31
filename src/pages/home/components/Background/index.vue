@@ -10,8 +10,8 @@
   <view
     class="bg-#111 w-100vw flex items-center flex-row"
     :style="{
-      height: _isIPhoneX ? '108px' : '80px',
-      paddingBottom: _isIPhoneX ? '28px' : '8px'
+      height: toolbarHeight,
+      paddingBottom: toolbarPaddingBottom
     }"
   >
     <scroll-view
@@ -43,13 +43,13 @@
 
 <script lang="ts" setup>
 import Color from '../Color/index.vue'
-import { isIPhoneX } from '@/utils/tools'
 import { useEditorStore } from '@/store'
+import { useSafeArea } from '@/hooks/useSafeArea'
 import { BgTabItem } from '@/enums'
 import { BgTabList } from '@/constants/tabs'
 
 const editorStore = useEditorStore()
-const _isIPhoneX = isIPhoneX()
+const { toolbarHeight, toolbarPaddingBottom } = useSafeArea()
 const size = editorStore.editor.workspacePlugin.workspaceSize
 const colorRef = ref()
 

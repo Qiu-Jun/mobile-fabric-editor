@@ -58,8 +58,10 @@
 import { debounce } from 'lodash-es'
 import { colors } from '@/constants/editor'
 import { useEditorStore } from '@/store'
+import { useCanvasObject } from '@/hooks/useCanvasObject'
 
 const editorStore = useEditorStore()
+const { activeObj, updateAttr } = useCanvasObject()
 const props = defineProps({
   typeKey: {
     type: String as PropType<'TextBox' | 'Bg'>,
@@ -67,25 +69,7 @@ const props = defineProps({
   }
 })
 
-const activeObj = computed(() => editorStore.canvas.getActiveObject())
 const curColor = ref('')
-const updateAttr = (
-  type:
-    | 'fill'
-    | 'fontStyle'
-    | 'fontWeight'
-    | 'opacity'
-    | 'underline'
-    | 'fontFamily'
-    | 'stroke'
-    | 'strokeWidth'
-    | 'imgUrl',
-  val: string | undefined
-) => {
-  const obj = unref(activeObj)
-  obj.set({ [type]: val })
-  editorStore.canvas.renderAll()
-}
 
 const handleSetColor = debounce(function (color: string) {
   if (props.typeKey === 'Bg') {

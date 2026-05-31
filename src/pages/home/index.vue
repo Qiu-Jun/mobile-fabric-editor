@@ -48,7 +48,7 @@
       class="w-100vw h-80vh f-center flex-col"
       id="workspace"
       :style="{
-        marginBottom: _isIPhoneX ? '10vh' : '6vh'
+        marginBottom: workspaceMarginBottom
       }"
     ></view>
 
@@ -56,8 +56,8 @@
     <view
       class="absolute left-0 right-0 bottom-0 w-100vw flex flex-row items-center justify-around"
       :style="{
-        height: _isIPhoneX ? '108px' : '80px',
-        paddingBottom: _isIPhoneX ? '28px' : '8px'
+        height: toolbarHeight,
+        paddingBottom: toolbarPaddingBottom
       }"
     >
       <view
@@ -119,7 +119,8 @@ import Background from './components/Background/index.vue'
 import Size from './components/Size/index.vue'
 import { fabric } from 'fabric'
 import { debounce } from 'lodash-es'
-import { isIPhoneX, guid, downFontByJSON } from '@/utils/tools'
+import { guid, downFontByJSON } from '@/utils/tools'
+import { useSafeArea } from '@/hooks/useSafeArea'
 import { Editor } from '@/core/editor'
 import { TabItem } from '@/enums'
 import { HomeTabList } from '@/constants/tabs'
@@ -151,7 +152,8 @@ const baseShapeConfig = {
   },
   Image: {}
 }
-const _isIPhoneX = isIPhoneX()
+const { toolbarHeight, toolbarPaddingBottom, workspaceMarginBottom } =
+  useSafeArea()
 const canvasStateRef = ref<any[]>([])
 
 let canvasRef: any = null
@@ -173,6 +175,7 @@ const getImgUrl = () => {
 }
 
 // 撤销 重做 start
+const MAX_HISTORY = 50
 const stateIndexRef = ref<number>(0)
 const historyState = (index: number) => {
   canvasRef.loadFromJSON(JSON.parse(canvasStateRef.value[index]), () => {
@@ -223,7 +226,6 @@ const handleSave = debounce(function () {
   // 后面接上传接口
   tplImgs[id] = imgUrls
   localStorage.setItem('tplImgs', JSON.stringify(tplImgs))
-  // setTpls((prev: any) => [...prev, { id, t: val }])
   uni.showToast({ title: '模板保存成功！', icon: 'success' })
 }, 250)
 
@@ -291,13 +293,7 @@ const handleOperate = debounce(function (type: TabType) {
         sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有，在H5浏览器端支持使用 `user` 和 `environment`分别指定为前后摄像头
         success: function (res) {
           // 返回选定照片的本地文件路径列表，tempFilePath可以作为img标签的src属性显示图片
-          // 方式一
-          // 上面的实现方式，如果是在纯前端的环境下，保存时背景图是地址是本地地址( 'blob:http://192.168.1.4:10086/3b64aab5-df0e-4ed2-affc-791f8a52c346' )。
-          // 这样不是很好，如果在别的电脑想通过 反序列化 渲染出来的时候，可能会出现问题
-          // const tempFilePaths = res.tempFilePaths;
-          // insertElement("Image", tempFilePaths[0]);
-
-          // 方式二 可以将file 图片转成 base64 再生成背景图。
+          // 将 file 图片转成 base64 再生成背景图
           const tempFiles: any = res.tempFiles
           if (tempFiles[0]) {
             const reader = new FileReader()
@@ -342,10 +338,10 @@ const onSelectAction = ({ index }: { index: number }) => {
       break
     case 2: // 素材
       uni.showModal({
-        titl: '提示',
+        title: '提示',
         content: '您确定清空画布吗？',
         cancelText: '取消',
-        confirmColor: '立即清空',
+        confirmText: '立即清空',
         success: (res) => {
           res.confirm && editor?.clear()
         }
@@ -373,6 +369,21 @@ onMounted(() => {
   uni.$on('initCurrentCom', () =>
     setCurrentCom({ showPop: false, comType: TabItem.template })
   )
+})
+
+onBeforeUnmount(() => {
+  // 清理画布事件监听
+  if (canvasRef) {
+    canvasRef.off({
+      'mouse:down': mouseDown,
+      'mouse:up': mouseUp,
+      'object:modified': updateCanvasState,
+      'object:added': updateCanvasState
+    })
+  }
+  // 清理编辑器资源
+  editor?.destroy()
+  uni.$off('initCurrentCom')
 })
 
 function mouseDown() {
@@ -403,17 +414,22 @@ function mouseDown() {
   }
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function mouseUp(opt: any) {
-  // console.log(opt)
+function mouseUp(_opt: any) {
+  // placeholder for canvas mouse:up event
 }
-function updateCanvasState() {
+const updateCanvasState = debounce(function () {
+  if (!canvasRef) return
   const canvasAsJson = JSON.stringify(
     canvasRef.toJSON(['id', 'selectable', 'hasControls'])
   )
   canvasStateRef.value.splice(stateIndexRef.value + 1)
   canvasStateRef.value.push(canvasAsJson)
+  // 限制历史记录大小，防止内存溢出
+  if (canvasStateRef.value.length > MAX_HISTORY) {
+    canvasStateRef.value.shift()
+  }
   stateIndexRef.value = canvasStateRef.value.length - 1
-}
+}, 300)
 
 // 插入原色
 function insertElement(type: ElementType, url?: any) {

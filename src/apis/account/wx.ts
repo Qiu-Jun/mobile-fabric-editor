@@ -10,6 +10,6 @@ export function wxAuth() {
 // 微信小程序绑定手机号码
 export function wxBindMobile() {
   return request({
-    url: '/consumer/auth/oauth/weapp/login'
+    url: '/consumer/auth/oauth/weapp/bindMobile'
   })
 }

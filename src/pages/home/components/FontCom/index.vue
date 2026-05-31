@@ -10,8 +10,8 @@
   <view
     class="bg-#111 w-100vw flex flex-row items-center"
     :style="{
-      height: _isIPhoneX ? '108px' : '80px',
-      paddingBottom: _isIPhoneX ? '28px' : '8px'
+      height: toolbarHeight,
+      paddingBottom: toolbarPaddingBottom
     }"
   >
     <scroll-view
@@ -54,14 +54,16 @@ import Arrow from '../Arrow/index.vue'
 import StyleView from '../StyleView/index.vue'
 import FontView from '../FontView/index.vue'
 import { debounce } from 'lodash-es'
-import { isIPhoneX } from '@/utils/tools'
 import { useEditorStore } from '@/store'
+import { useClipboard } from '@/hooks/useClipboard'
+import { useSafeArea } from '@/hooks/useSafeArea'
 import { TextTab } from '@/enums'
 import { TextTabList } from '@/constants/tabs'
 
 const editorStore = useEditorStore()
-const activeObj = computed(() => editorStore.canvas.getActiveObject())
-const _isIPhoneX = isIPhoneX()
+const activeObj = computed(() => editorStore.canvas?.getActiveObject())
+const { paste } = useClipboard()
+const { toolbarHeight, toolbarPaddingBottom } = useSafeArea()
 
 const colorRef = ref()
 const opacityRef = ref()
@@ -70,28 +72,6 @@ const arrowRef = ref()
 const styleviewRef = ref()
 const fontviewRef = ref()
 
-const paste = (_clipboard: any) => {
-  _clipboard.clone(function (clonedObj: any) {
-    editorStore.canvas?.discardActiveObject()
-    clonedObj.set({
-      left: clonedObj.left + 20,
-      top: clonedObj.top + 20,
-      evented: true
-    })
-    if (clonedObj.type === 'activeSelection') {
-      clonedObj.canvas = editorStore.canvas
-      clonedObj.forEachObject(function (obj: any) {
-        editorStore.canvas.add(obj)
-      })
-      clonedObj.setCoords()
-    } else {
-      editorStore.canvas.add(clonedObj)
-    }
-    _clipboard.top += 20
-    _clipboard.left += 20
-    editorStore.canvas.setActiveObject(clonedObj)
-  })
-}
 const handleMenu = debounce(function (type: string) {
   const _activeObj = unref(activeObj)
   switch (type) {

@@ -44,6 +44,15 @@ export default defineConfig({
     // uno报错处理
     watch: {
       exclude: ['node_modules/**', '/__uno.css']
+    },
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          fabric: ['fabric'],
+          lodash: ['lodash-es'],
+          vendor: ['vue', 'pinia']
+        }
+      }
     }
   }
 })

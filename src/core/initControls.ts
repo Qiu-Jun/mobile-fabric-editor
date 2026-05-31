@@ -3,6 +3,7 @@ import verticalImg from './control/middlecontrol.svg'
 import horizontalImg from './control/middlecontrolhoz.svg'
 import edgeImg from './control/edgecontrol.svg'
 import rotateImg from './control/rotateicon.svg'
+import { CONTROL_SIZE } from '@/constants/canvas'
 
 const deleteIcon =
   "data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F%3E%3C!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.1//EN' 'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'%3E%3Csvg version='1.1' id='Ebene_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' width='595.275px' height='595.275px' viewBox='200 215 230 470' xml:space='preserve'%3E%3Ccircle style='fill:%23F44336;' cx='299.76' cy='439.067' r='218.516'/%3E%3Cg%3E%3Crect x='267.162' y='307.978' transform='matrix(0.7071 -0.7071 0.7071 0.7071 -222.6202 340.6915)' style='fill:white;' width='65.545' height='262.18'/%3E%3Crect x='266.988' y='308.153' transform='matrix(0.7071 0.7071 -0.7071 0.7071 398.3889 -83.3116)' style='fill:white;' width='65.544' height='262.179'/%3E%3C/g%3E%3C/svg%3E"
@@ -22,199 +23,91 @@ img4.src = rotateImg
 const img5 = document.createElement('img')
 img5.src = deleteIcon
 
-//头部描述
-function renderImgText(
-  ctx: {
-    save: () => void
-    translate: (arg0: any, arg1: any) => void
-    rotate: (arg0: any) => void
-    fillText: (arg0: string, arg1: number, arg2: number) => void
-    restore: () => void
-  },
-  left: any,
-  top: any,
-  styleOverride: any,
-  fabricObject: { angle: any }
+/**
+ * 创建图片控件渲染函数
+ * @param image 图片元素
+ * @param width 渲染宽度
+ * @param height 渲染高度
+ */
+function createImageRenderer(
+  image: HTMLImageElement,
+  width: number,
+  height: number
 ) {
-  ctx.save()
-  ctx.translate(left, top)
-  ctx.rotate(fabric.util.degreesToRadians(fabricObject.angle))
-  ctx.fillText('双指进行缩放', -30, 0)
-  ctx.restore()
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return (
+    ctx: any,
+    left: number,
+    top: number,
+    _styleOverride: any,
+    fabricObject: any
+  ) => {
+    ctx.save()
+    ctx.translate(left, top)
+    ctx.rotate(fabric.util.degreesToRadians(fabricObject.angle))
+    ctx.drawImage(image, -width / 2, -height / 2, width, height)
+    ctx.restore()
+  }
 }
 
-function renderText(
-  ctx: {
-    save: () => void
-    translate: (arg0: any, arg1: any) => void
-    rotate: (arg0: any) => void
-    fillText: (arg0: string, arg1: number, arg2: number) => void
-    restore: () => void
-  },
-  left: any,
-  top: any,
-  styleOverride: any,
-  fabricObject: { angle: any }
-) {
-  ctx.save()
-  ctx.translate(left, top)
-  ctx.rotate(fabric.util.degreesToRadians(fabricObject.angle))
-  ctx.fillText('双击进行编辑', -30, 0)
-  ctx.restore()
+/**
+ * 创建文本控件渲染函数
+ * @param text 显示文本
+ */
+function createTextRenderer(text: string) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return (
+    ctx: any,
+    left: number,
+    top: number,
+    _styleOverride: any,
+    fabricObject: any
+  ) => {
+    ctx.save()
+    ctx.translate(left, top)
+    ctx.rotate(fabric.util.degreesToRadians(fabricObject.angle))
+    ctx.fillText(text, -30, 0)
+    ctx.restore()
+  }
 }
 
-// 两边中间图标
-function renderIcon(
-  ctx: {
-    save: () => void
-    translate: (arg0: any, arg1: any) => void
-    rotate: (arg0: any) => void
-    drawImage: (
-      arg0: HTMLImageElement,
-      arg1: number,
-      arg2: number,
-      arg3: number,
-      arg4: number
-    ) => void
-    restore: () => void
-  },
-  left: any,
-  top: any,
-  styleOverride: any,
-  fabricObject: { angle: any }
-) {
-  const wsize = 20
-  const hsize = 25
-  ctx.save()
-  ctx.translate(left, top)
-  ctx.rotate(fabric.util.degreesToRadians(fabricObject.angle))
-  ctx.drawImage(img, -wsize / 2, -hsize / 2, wsize, hsize)
-  ctx.restore()
-}
-
-// 上下中间图标
-function renderIconHoz(
-  ctx: {
-    save: () => void
-    translate: (arg0: any, arg1: any) => void
-    rotate: (arg0: any) => void
-    drawImage: (
-      arg0: HTMLImageElement,
-      arg1: number,
-      arg2: number,
-      arg3: number,
-      arg4: number
-    ) => void
-    restore: () => void
-  },
-  left: any,
-  top: any,
-  styleOverride: any,
-  fabricObject: { angle: any }
-) {
-  const wsize = 25
-  const hsize = 20
-  ctx.save()
-  ctx.translate(left, top)
-  ctx.rotate(fabric.util.degreesToRadians(fabricObject.angle))
-  ctx.drawImage(img2, -wsize / 2, -hsize / 2, wsize, hsize)
-  ctx.restore()
-}
-
-// 四角图标
-function renderIconEdge(
-  ctx: {
-    save: () => void
-    translate: (arg0: any, arg1: any) => void
-    rotate: (arg0: any) => void
-    drawImage: (
-      arg0: HTMLImageElement,
-      arg1: number,
-      arg2: number,
-      arg3: number,
-      arg4: number
-    ) => void
-    restore: () => void
-  },
-  left: any,
-  top: any,
-  styleOverride: any,
-  fabricObject: { angle: any }
-) {
-  const wsize = 25
-  const hsize = 25
-  ctx.save()
-  ctx.translate(left, top)
-  ctx.rotate(fabric.util.degreesToRadians(fabricObject.angle))
-  ctx.drawImage(img3, -wsize / 2, -hsize / 2, wsize, hsize)
-  ctx.restore()
-}
-
-// 旋转图标
-function renderIconRotate(
-  ctx: {
-    save: () => void
-    translate: (arg0: any, arg1: any) => void
-    rotate: (arg0: any) => void
-    drawImage: (
-      arg0: HTMLImageElement,
-      arg1: number,
-      arg2: number,
-      arg3: number,
-      arg4: number
-    ) => void
-    restore: () => void
-  },
-  left: any,
-  top: any,
-  styleOverride: any,
-  fabricObject: { angle: any }
-) {
-  const wsize = 40
-  const hsize = 40
-  ctx.save()
-  ctx.translate(left, top)
-  ctx.rotate(fabric.util.degreesToRadians(fabricObject.angle))
-  ctx.drawImage(img4, -wsize / 2, -hsize / 2, wsize, hsize)
-  ctx.restore()
-}
-
-// 删除图标
-function renderIconDel(
-  ctx: {
-    save: () => void
-    translate: (arg0: any, arg1: any) => void
-    rotate: (arg0: any) => void
-    drawImage: (
-      arg0: HTMLImageElement,
-      arg1: number,
-      arg2: number,
-      arg3: number,
-      arg4: number
-    ) => void
-    restore: () => void
-  },
-  left: any,
-  top: any,
-  styleOverride: any,
-  fabricObject: { angle: any }
-) {
-  const wsize = 20
-  const hsize = 20
-  ctx.save()
-  ctx.translate(left, top)
-  ctx.rotate(fabric.util.degreesToRadians(fabricObject.angle))
-  ctx.drawImage(img5, -wsize / 2, -hsize / 2, wsize, hsize)
-  ctx.restore()
-}
+// 使用工厂函数创建各控件渲染器
+const renderIcon = createImageRenderer(
+  img,
+  CONTROL_SIZE.VERTICAL_WIDTH,
+  CONTROL_SIZE.VERTICAL_HEIGHT
+)
+const renderIconHoz = createImageRenderer(
+  img2,
+  CONTROL_SIZE.HORIZONTAL_WIDTH,
+  CONTROL_SIZE.HORIZONTAL_HEIGHT
+)
+const renderIconEdge = createImageRenderer(
+  img3,
+  CONTROL_SIZE.CORNER_SIZE,
+  CONTROL_SIZE.CORNER_SIZE
+)
+const renderIconRotate = createImageRenderer(
+  img4,
+  CONTROL_SIZE.ROTATE_SIZE,
+  CONTROL_SIZE.ROTATE_SIZE
+)
+const renderIconDel = createImageRenderer(
+  img5,
+  CONTROL_SIZE.DELETE_SIZE,
+  CONTROL_SIZE.DELETE_SIZE
+)
+const renderImgText = createTextRenderer('双指进行缩放')
+const renderText = createTextRenderer('双击进行编辑')
 
 // 删除事件
-function deleteObject(_eventData: any, transform: { target: any }) {
+function deleteObject(_eventData: any, transform: { target: any }): boolean {
   const target = transform.target
   const canvas = target.canvas
   canvas.remove(target)
   canvas.requestRenderAll()
   uni.$emit('initCurrentCom')
+  return true
 }
 
 // 选中样式列表
@@ -362,8 +255,6 @@ function initControls(canvas: {
   textBoxControls.tl = fabric.Object.prototype.controls.tl
   textBoxControls.bl = fabric.Object.prototype.controls.bl
   textBoxControls.deleteControl = fabric.Object.prototype.controls.deleteControl
-  // textBoxControls.mt = fabric.Object.prototype.controls.mt;
-  // textBoxControls.mb = fabric.Object.prototype.controls.mb;
 
   textBoxControls.ml = new fabric.Control({
     x: -0.5,

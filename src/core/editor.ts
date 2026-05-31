@@ -12,20 +12,13 @@ import initAligningGuidelines from '@/core/initAligningGuidelines'
 import { Workspace } from '@/core/Workspace'
 import { fontsList } from '@/constants/editor'
 import { createFontCSS } from './utils/font'
-import { useEditorStoreSide } from '@/store/modules/editor'
-
-// interface ICanvas extends fabric.Canvas {
-//   selectionColor?: string
-//   selectionBorderColor?: string
-//   selectionLineWidth?: number
-// }
-
-const editorStore = useEditorStoreSide()
+import { useEditorStore } from '@/store'
 
 export class Editor {
-  public canvas: any = null
-  public workspacePlugin: any = null
+  public canvas: fabric.Canvas | null = null
+  public workspacePlugin: Workspace | null = null
   private workspaceEl: HTMLElement | null = null
+  private cleanupAligningGuidelines: (() => void) | null = null
   constructor() {
     this.init()
   }
@@ -44,12 +37,13 @@ export class Editor {
       includeDefaultValues: false, // 精简json
       controlsAboveOverlay: true // 超出clipPath后仍然展示控制条
     })
+    const editorStore = useEditorStore()
     if (this.canvas) {
       editorStore.setCanvas(this.canvas)
       // 选择器样式
       initControls(this.canvas)
-      // 辅助线
-      initAligningGuidelines(this.canvas)
+      // 辅助线（保存清理函数）
+      this.cleanupAligningGuidelines = initAligningGuidelines(this.canvas)
       this.workspacePlugin = new Workspace(this.canvas, this.workspaceEl)
       // 初始化字体
       createFontCSS(fontsList)
@@ -57,15 +51,25 @@ export class Editor {
   }
 
   getWorkspace() {
+    if (!this.canvas) return null
     return this.canvas
       .getObjects()
       .find((item: any) => item.id === 'workspace') as fabric.Rect
   }
 
   destroy() {
+    // 清理辅助线事件监听
+    this.cleanupAligningGuidelines?.()
+    this.cleanupAligningGuidelines = null
+    if (this.canvas) {
+      this.canvas.clear()
+      this.canvas.dispose()
+    }
+    this.workspacePlugin?.destroy()
     this.canvas = null
-    this.workspacePlugin.destroy()
+    this.workspacePlugin = null
     this.workspaceEl = null
+    const editorStore = useEditorStore()
     editorStore.setCanvas(null)
     editorStore.setEditor(null)
   }

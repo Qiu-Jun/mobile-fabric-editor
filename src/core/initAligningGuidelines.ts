@@ -1,16 +1,17 @@
 import { fabric } from 'fabric'
+import { ALIGNING } from '@/constants/canvas'
 
 /**
  * Should objects be aligned by a bounding box?
  * [Bug] Scaled objects sometimes can not be aligned by edges
  * https://github.com/fabricjs/fabric.js/blob/master/lib/aligning_guidelines.js
  */
-function initAligningGuidelines(canvas: any) {
+function initAligningGuidelines(canvas: any): () => void {
   const ctx = canvas.getSelectionContext(),
-    aligningLineOffset = 5,
-    aligningLineMargin = 4,
-    aligningLineWidth = 1,
-    aligningLineColor = 'rgb(0,255,0)'
+    aligningLineOffset = ALIGNING.LINE_OFFSET,
+    aligningLineMargin = ALIGNING.LINE_MARGIN,
+    aligningLineWidth = ALIGNING.LINE_WIDTH,
+    aligningLineColor = ALIGNING.LINE_COLOR
   let zoom = 1,
     viewportTransform: number[]
 
@@ -73,6 +74,9 @@ function initAligningGuidelines(canvas: any) {
   })
 
   canvas.on('object:moving', function (e: any) {
+    // 防止除零错误
+    if (viewportTransform[0] === 0 || viewportTransform[3] === 0) return
+
     const activeObject = e.target,
       canvasObjects = canvas.getObjects(),
       activeObjectCenter = activeObject.getCenterPoint(),
@@ -273,8 +277,8 @@ function initAligningGuidelines(canvas: any) {
     // fix 保存图片时报错
     try {
       canvas.clearContext(canvas.contextTop)
-    } catch (error) {
-      console.log(error)
+    } catch {
+      // ignore clear context error
     }
   })
 
@@ -293,5 +297,14 @@ function initAligningGuidelines(canvas: any) {
     verticalLines.length = horizontalLines.length = 0
     canvas.renderAll()
   })
+
+  // 返回清理函数，用于移除所有事件监听
+  return () => {
+    canvas.off('mouse:down')
+    canvas.off('object:moving')
+    canvas.off('before:render')
+    canvas.off('after:render')
+    canvas.off('mouse:up')
+  }
 }
 export default initAligningGuidelines

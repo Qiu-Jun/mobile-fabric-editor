@@ -44,30 +44,11 @@
 import { debounce } from 'lodash-es'
 import FontFaceObserver from 'fontfaceobserver'
 import { fontsList } from '@/constants/editor'
-import { useEditorStore } from '@/store'
+import { useCanvasObject } from '@/hooks/useCanvasObject'
 
-const editorStore = useEditorStore()
-const activeObj = computed(() => editorStore.canvas.getActiveObject())
+const { updateAttr } = useCanvasObject()
 const show = ref(false)
 const curIndex = ref(0)
-
-const updateAttr = (
-  type:
-    | 'fill'
-    | 'fontStyle'
-    | 'fontWeight'
-    | 'opacity'
-    | 'underline'
-    | 'fontFamily'
-    | 'stroke'
-    | 'strokeWidth'
-    | 'imgUrl',
-  val: string | undefined
-) => {
-  const obj = unref(activeObj)
-  obj.set({ [type]: val })
-  editorStore.canvas.renderAll()
-}
 
 const open = () => {
   show.value = true

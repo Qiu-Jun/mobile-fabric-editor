@@ -16,7 +16,8 @@ export default function upload(options: Irequest) {
       success: (res) => {
         const { statusCode, data: resData } = res
         if (statusCode === 200) {
-          const { data, code, message } = resData as any
+          const { data, code, message } =
+            typeof resData === 'string' ? JSON.parse(resData) : resData
           if (code === 10000) {
             resolve({ data, code, message })
           } else {
@@ -31,14 +32,19 @@ export default function upload(options: Irequest) {
             icon: 'none',
             title: errTips[statusCode] || '请求失败'
           })
+          reject({
+            code: statusCode,
+            message: errTips[statusCode] || '请求失败',
+            data: null
+          })
         }
       },
       fail: (err) => {
-        console.log(err)
         uni.showToast({
           icon: 'none',
           title: '请求失败，请检查您的网络是否正常'
         })
+        reject({ code: -1, message: err.errMsg || '网络请求失败', data: null })
       },
       complete: () => {
         config.showLoading && uni.hideLoading()

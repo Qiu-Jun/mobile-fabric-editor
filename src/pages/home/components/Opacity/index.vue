@@ -35,31 +35,11 @@
 
 <script lang="ts" setup>
 import { throttle } from 'lodash-es'
-import { useEditorStore } from '@/store'
+import { useCanvasObject } from '@/hooks/useCanvasObject'
 
-const editorStore = useEditorStore()
-
-const activeObj = computed(() => editorStore.canvas.getActiveObject())
+const { activeObj, updateAttr } = useCanvasObject()
 const show = ref(false)
 
-const updateAttr = (
-  type:
-    | 'fill'
-    | 'fontStyle'
-    | 'fontWeight'
-    | 'opacity'
-    | 'fontSize'
-    | 'underline'
-    | 'fontFamily'
-    | 'stroke'
-    | 'strokeWidth'
-    | 'imgUrl',
-  val: any
-) => {
-  const obj = unref(activeObj)
-  obj.set({ [type]: val })
-  editorStore.canvas.renderAll()
-}
 const curOpacity = ref(100)
 const onChange = throttle(function ({ value }: { value: number }) {
   updateAttr('opacity', value / 100)

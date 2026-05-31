@@ -15,7 +15,7 @@
   >
     <view class="w-710rpx bg-#fff rounded-24rpx">
       <view class="box-border p-20rpx mb-20rpx">
-        <view class="flex justify-betwwen items-center">
+        <view class="flex justify-between items-center">
           <view class="flex-1 mr-20rpx flex justify-start items-center">
             <view>宽度：</view>
             <wd-input-number v-model="state.width" />
