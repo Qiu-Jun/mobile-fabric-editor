@@ -232,7 +232,13 @@ const handleSave = debounce(function () {
 // 模板相关 start
 const tempRef = ref()
 const onSelectTemp = (item: any) => {
-  item.id && renderJson(item.id)
+  if (!item) return
+  // 本地模板直接使用 json 数据，用户模板从 localStorage 读取
+  if (item.json) {
+    renderJsonFromData(item.json)
+  } else if (item.id) {
+    renderJson(item.id)
+  }
 }
 // 模板相关 end
 
@@ -470,17 +476,44 @@ function insertElement(type: ElementType, url?: any) {
   canvasRef.add(shape).setActiveObject(shape) // 添加并设置激活
 }
 
-// 读取模板 json
+// 读取模板 json（从 localStorage）
 function renderJson(id: string) {
   const tplsV = JSON.parse(localStorage.getItem('tpls') || '{}')
+  const jsonData = tplsV[id].json
   clear()
-  // 加载字体后导入
-  downFontByJSON(tplsV[id].json).then(() => {
-    canvasRef.loadFromJSON(tplsV[id].json, () => {
-      canvasRef.renderAll.bind(canvasRef)
-      editor.workspacePlugin?.resetWorkspace()
+  uni.showLoading({ title: '加载中...', mask: true })
+  downFontByJSON(jsonData)
+    .then(() => {
+      canvasRef.loadFromJSON(jsonData, () => {
+        editor.workspacePlugin?.resetWorkspace()
+        // 加载完成后自动缩放视图，使模板适配画布
+        editor.workspacePlugin?.auto()
+        canvasRef.renderAll()
+        uni.hideLoading()
+      })
     })
-  })
+    .catch(() => {
+      uni.hideLoading()
+    })
+}
+
+// 读取模板 json（直接传入 JSON 数据，用于本地预设模板）
+function renderJsonFromData(jsonData: Record<string, unknown>) {
+  clear()
+  uni.showLoading({ title: '加载中...', mask: true })
+  downFontByJSON(jsonData)
+    .then(() => {
+      canvasRef.loadFromJSON(jsonData, () => {
+        editor.workspacePlugin?.resetWorkspace()
+        // 加载完成后自动缩放视图，使模板适配画布
+        editor.workspacePlugin?.auto()
+        canvasRef.renderAll()
+        uni.hideLoading()
+      })
+    })
+    .catch(() => {
+      uni.hideLoading()
+    })
 }
 
 // 清空画布

@@ -1,6 +1,6 @@
 <!--
  * @Author: June
- * @Description: 
+ * @Description:
  * @Date: 2024-08-16 17:33:20
  * @LastEditTime: 2024-11-23 08:26:18
  * @LastEditors: June
@@ -21,7 +21,7 @@
         <image
           class="w-31.3vw h-48vw mb-10rpx mr-8rpx img"
           v-for="item in list"
-          :key="item"
+          :key="item.id"
           :src="item.img"
           @click="handleSelectTemp(item)"
         />
@@ -37,12 +37,21 @@
 
 <script lang="ts" setup>
 import { debounce } from 'lodash-es'
+import temp1Img from '@/assets/temps/temp1.png'
+import temp2Img from '@/assets/temps/temp2.png'
+import temp1Data from '@/assets/temps/temp1.json'
+import temp2Data from '@/assets/temps/temp2.json'
+
+interface TemplateItem {
+  id: string
+  img: string
+  json?: Record<string, unknown>
+}
 
 const emits = defineEmits(['select'])
 
 const show = ref(false)
-
-const list: any = ref([])
+const list = ref<TemplateItem[]>([])
 
 const open = () => {
   show.value = true
@@ -51,23 +60,36 @@ const close = () => {
   show.value = false
 }
 
-const handleSelectTemp = debounce(function (item) {
+const handleSelectTemp = debounce(function (item: TemplateItem) {
   emits('select', item)
   close()
 }, 250)
 
 const initTemplate = () => {
+  // 本地预设模板
+  const localTemplates: TemplateItem[] = [
+    {
+      id: 'local_temp1',
+      img: temp1Img,
+      json: temp1Data as unknown as Record<string, unknown>
+    },
+    {
+      id: 'local_temp2',
+      img: temp2Img,
+      json: temp2Data as unknown as Record<string, unknown>
+    }
+  ]
+
+  // 用户保存的模板
   const tplsValue = JSON.parse(localStorage.getItem('tpls') || '{}')
   const tplImgs = JSON.parse(localStorage.getItem('tplImgs') || '{}')
-  const _list = Object.keys(tplsValue).map((item) => ({
-    t: tplsValue[item].t,
-    id: item
+  const userTemplates: TemplateItem[] = Object.keys(tplsValue).map((id) => ({
+    id,
+    img: tplImgs[id]
   }))
-  if (_list.length === 0) return
-  list.value = _list.map((i) => ({
-    ...i,
-    img: tplImgs[i.id]
-  }))
+
+  // 本地模板在前，用户模板在后
+  list.value = [...localTemplates, ...userTemplates]
 }
 
 watch(
